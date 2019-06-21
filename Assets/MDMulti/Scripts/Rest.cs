@@ -10,8 +10,8 @@ namespace MDMulti
     /// <summary>REST class for getting data from the server.</summary>
     public class Rest
     {
-        static readonly string ServerUrl = "http://localhost:3000";
-        static readonly int ProtocolVersion = 1;
+        public static readonly string ServerUrl = "http://localhost:3000";
+        public static readonly int ProtocolVersion = 1;
 
         static string ConstructUrl(string end)
         {
