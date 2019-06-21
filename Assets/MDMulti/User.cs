@@ -14,13 +14,17 @@ namespace MDMulti
             List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
             formData.Add(new MultipartFormDataSection("displayName=" + displayName));
 
-            Core.RequestResponse res = Core.Post("users/create", formData);
 
-            Debug.Log("RES TYPE: " + res.Type());
-            Debug.Log("RES CODE: " + res.ResponseCode());
-            Debug.Log("RES PROTO: " + res.ProtocolVersion());
-            Debug.Log("RES DATA: " + res.ResponseData());
-            
+            if (MainMono.InScene())
+            {
+                MainMono.Mono.StartCoroutine(Rest.Post("users/create", formData, res =>
+                {
+                    Debug.Log("RES TYPE: " + res.Type());
+                    Debug.Log("RES CODE: " + res.ResponseCode());
+                    Debug.Log("RES PROTO: " + res.ProtocolVersion());
+                    Debug.Log("RES DATA: " + res.ResponseData());
+                }));
+            }
         }
     }
 }

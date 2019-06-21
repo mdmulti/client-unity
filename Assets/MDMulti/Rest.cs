@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 
@@ -6,50 +7,47 @@ using Debug = UnityEngine.Debug;
 
 namespace MDMulti
 {
-    public class Core
+    /// <summary>REST class for getting data from the server.</summary>
+    public class Rest
     {
-        static string ServerUrl = "http://localhost:3000";
-        static int ProtocolVersion = 1;
+        static readonly string ServerUrl = "http://localhost:3000";
+        static readonly int ProtocolVersion = 1;
 
         static string ConstructUrl(string end)
         {
             return ServerUrl + "/" + end;
         }
 
-        public static RequestResponse Get(string path)
+        public static IEnumerator Get(string path, Action<RequestResponse> onComplete)
         {
             UnityWebRequest www = UnityWebRequest.Get(ConstructUrl(path));
-            www.SendWebRequest();
+            yield return www.SendWebRequest();
 
             if (www.isNetworkError || www.isHttpError)
             {
-                Debug.Log(www.error);
-                return new RequestResponse(ResponseTypes.ERR, www);
+                onComplete(new RequestResponse(ResponseTypes.ERR, www));
             }
             else
             {
-                // Show results as text
-                Debug.Log(www.downloadHandler.text);
-
-                return new RequestResponse(ResponseTypes.GET, www);
+                onComplete(new RequestResponse(ResponseTypes.GET, www));
             }
         }
 
-        public static RequestResponse Post(string path, List<IMultipartFormSection> formData)
+        public static IEnumerator Post(string path, List<IMultipartFormSection> formData, Action<RequestResponse> onComplete)
         {
             UnityWebRequest www = UnityWebRequest.Post(ConstructUrl(path), formData);
-            www.SendWebRequest();
+            www.timeout = 10;
+            Debug.Log(www.timeout);
+            yield return www.SendWebRequest();
 
             if (www.isNetworkError || www.isHttpError)
             {
-                Debug.Log(www.error);
-                return new RequestResponse(ResponseTypes.ERR, www);
+                Debug.Log("ERROR");
+                onComplete(new RequestResponse(ResponseTypes.ERR, www));
             }
             else
             {
-                Debug.Log("Form upload complete!");
-                Debug.Log(www.isDone);
-                return new RequestResponse(ResponseTypes.POST, www);
+                onComplete(new RequestResponse(ResponseTypes.POST, www));
             }
         }
 
