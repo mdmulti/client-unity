@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine.Networking;
 
 using Debug = UnityEngine.Debug;
@@ -15,9 +13,9 @@ namespace MDMulti
             formData.Add(new MultipartFormDataSection("displayName=" + displayName));
 
 
-            if (MainMono.InScene())
+            if (Mono.Main.InScene())
             {
-                MainMono.Mono.StartCoroutine(Rest.Post("users/create", formData, res =>
+                Mono.Main.Inst.StartCoroutine(Rest.Post("users/create", formData, res =>
                 {
                     Debug.Log("RES TYPE: " + res.Type());
                     Debug.Log("RES CODE: " + res.ResponseCode());

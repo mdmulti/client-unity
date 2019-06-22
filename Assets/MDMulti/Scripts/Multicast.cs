@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -10,9 +9,9 @@ namespace MDMulti
 {
     public class Multicast
     {
-        public static readonly string MulticastAddressString = "224.5.125.85";
+        public static readonly string MulticastAddressString = Mono.Options.Instance.multicast.ip;
 
-        private static WaitForSeconds waitForSeconds = new WaitForSeconds(1.5f);
+        private static WaitForSeconds waitForSeconds = new WaitForSeconds(Mono.Options.Instance.multicast.broadcastDelay);
 
         public static Opts SetupForBroadcast()
         {
@@ -20,12 +19,12 @@ namespace MDMulti
 
             IPAddress multicastaddress = IPAddress.Parse(MulticastAddressString);
             udpclient.JoinMulticastGroup(multicastaddress);
-            IPEndPoint remoteep = new IPEndPoint(multicastaddress, 29571);
+            IPEndPoint remoteep = new IPEndPoint(multicastaddress, Mono.Options.Instance.multicast.port);
 
             Byte[] buffer = null;
 
             Message message = new Message();
-            message.applicationName = "Test";
+            message.applicationName = Mono.Options.Instance.appName;
             buffer = Encoding.Unicode.GetBytes(JsonUtility.ToJson(message));
 
             Debug.Log("Message: " + JsonUtility.ToJson(message));
@@ -49,7 +48,7 @@ namespace MDMulti
         {
             if (!isBroadcasting)
             {
-                coroutineInstance = MainMono.Mono.StartCoroutine(Broadcast(o.udpclient, o.buffer, o.remoteep));
+                coroutineInstance = Mono.Main.Inst.StartCoroutine(Broadcast(o.udpclient, o.buffer, o.remoteep));
                 isBroadcasting = true;
             }
 
@@ -60,7 +59,7 @@ namespace MDMulti
         {
             if (isBroadcasting)
             {
-                MainMono.Mono.StopCoroutine(coroutineInstance);
+                Mono.Main.Inst.StopCoroutine(coroutineInstance);
                 isBroadcasting = false;
             }
 

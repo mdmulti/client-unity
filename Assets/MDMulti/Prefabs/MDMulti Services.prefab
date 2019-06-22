@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4851214087163562}
   - component: {fileID: 114611080869842652}
+  - component: {fileID: 114969064621932192}
   m_Layer: 0
   m_Name: MDMulti Services
   m_TagString: Untagged
@@ -51,3 +52,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34bca9240c19944eb70459f182d008d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114969064621932192
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1825162632218938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 058d5260966f47d40a472b86e9acca80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  appName: PleaseChangeMe
+  multicast:
+    ip: 224.5.125.85
+    port: 29571
+    broadcastDelay: 1.5

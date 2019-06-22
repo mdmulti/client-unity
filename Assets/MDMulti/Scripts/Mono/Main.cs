@@ -1,19 +1,19 @@
 ﻿using UnityEngine;
 
-namespace MDMulti
+namespace MDMulti.Mono
 {
-    public class MainMono : MonoBehaviour
+    public class Main : MonoBehaviour
     {
-        public static MonoBehaviour Mono;
+        public static MonoBehaviour Inst;
 
         public void Start()
         {
-            Mono = this;
+            Inst = this;
         }
 
         public static bool InScene()
         {
-            if (Mono == null)
+            if (Inst == null)
             {
                 Debug.LogError("MDMulti Services Prefab not in Scene!");
                 return false;

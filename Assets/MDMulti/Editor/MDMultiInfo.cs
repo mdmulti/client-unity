@@ -54,6 +54,6 @@ public class MDMultiInfo : EditorWindow {
 
     public static bool MainMonoLoaded()
     {
-        return MDMulti.MainMono.Mono == null;
+        return MDMulti.Mono.Main.Inst == null;
     }
 }
