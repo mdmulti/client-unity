@@ -24,9 +24,14 @@ namespace MDMulti.Mono
             }));
         }
 
-        public void MulticastBroadcast()
+        public void MulticastBroadcastStart()
         {
-            Multicast.Broadcast();
+            Multicast.StartBroadcasting(Multicast.SetupForBroadcast());
+        }
+
+        public void MulticastBroadcastStop()
+        {
+            Multicast.StopBroadcasting();
         }
     }
 }

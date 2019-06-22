@@ -12,7 +12,9 @@ namespace MDMulti
     {
         public static readonly string MulticastAddressString = "224.5.125.85";
 
-        public static void Broadcast()
+        private static WaitForSeconds waitForSeconds = new WaitForSeconds(1.5f);
+
+        public static Opts SetupForBroadcast()
         {
             UdpClient udpclient = new UdpClient();
 
@@ -27,17 +29,62 @@ namespace MDMulti
             buffer = Encoding.Unicode.GetBytes(JsonUtility.ToJson(message));
 
             Debug.Log("Message: " + JsonUtility.ToJson(message));
-            Debug.Log("s: " + message.server);
 
-            for (int i = 0; i <= 100; i++)
-            {
+            return new Opts(udpclient, buffer, remoteep);
+        }
+
+        private static IEnumerator Broadcast(UdpClient udpclient, Byte[] buffer, IPEndPoint remoteep)
+        {
+            while (true) {
                 udpclient.Send(buffer, buffer.Length, remoteep);
-                UnityEngine.Debug.Log("Sent " + i);
+                Debug.Log("Sent " + Time.frameCount);
+                yield return waitForSeconds;
             }
         }
 
-        //public static IEnumerator Search
+        private static bool isBroadcasting = false;
+        private static Coroutine coroutineInstance;
 
+        public static void StartBroadcasting(Opts o)
+        {
+            if (!isBroadcasting)
+            {
+                coroutineInstance = MainMono.Mono.StartCoroutine(Broadcast(o.udpclient, o.buffer, o.remoteep));
+                isBroadcasting = true;
+            }
+
+            EditorExternalFactors.MulticastBroadcastActive = isBroadcasting;
+        }
+
+        public static void StopBroadcasting()
+        {
+            if (isBroadcasting)
+            {
+                MainMono.Mono.StopCoroutine(coroutineInstance);
+                isBroadcasting = false;
+            }
+
+            EditorExternalFactors.MulticastBroadcastActive = isBroadcasting;
+        }
+
+        [Serializable]
+        public class Opts
+        {
+            public UdpClient udpclient;
+            public Byte[] buffer;
+            public IPEndPoint remoteep;
+
+            public Opts(UdpClient udpclient, Byte[] buffer, IPEndPoint remoteep)
+            {
+                this.udpclient = udpclient;
+                this.buffer = buffer;
+                this.remoteep = remoteep;
+            }
+        }
+
+        /// <summary>
+        /// Class for creating Multicast messages.
+        /// </summary>
         [Serializable]
         public class Message
         {
@@ -45,6 +92,9 @@ namespace MDMulti
             public int protocolVersion;
             public string applicationName;
 
+            /// <summary>
+            /// Constructor for creating Multicast messages.
+            /// </summary>
             public Message()
             {
                 server = "MDMulti";

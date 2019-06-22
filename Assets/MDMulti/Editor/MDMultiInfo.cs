@@ -23,6 +23,12 @@ public class MDMultiInfo : EditorWindow {
         GUILayout.Label("Rest Information", EditorStyles.boldLabel);
         PropertyLabel("Base URL", MDMulti.Rest.ServerUrl);
         PropertyLabel("Protocol Version", MDMulti.Rest.ProtocolVersion.ToString());
+        PropertyLabel("Broadcasting?", MDMulti.EditorExternalFactors.MulticastBroadcastActive.ToString());
+    }
+
+    void Update()
+    {
+        Repaint();
     }
 
     /*
@@ -48,13 +54,6 @@ public class MDMultiInfo : EditorWindow {
 
     public static bool MainMonoLoaded()
     {
-        if (MDMulti.MainMono.Mono == null)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        return MDMulti.MainMono.Mono == null;
     }
 }
