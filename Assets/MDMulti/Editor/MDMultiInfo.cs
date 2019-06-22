@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 
 public class MDMultiInfo : EditorWindow {
@@ -15,14 +13,17 @@ public class MDMultiInfo : EditorWindow {
 
     void OnGUI()
     {
-        GUILayout.Label("Main Mono Information", EditorStyles.boldLabel);
-        PropertyLabel("Loaded", MainMonoLoaded().ToString());
+        GUILayout.Label("MDMulti Information", EditorStyles.boldLabel);
+
+        PropertyLabel("Services Loaded", MainMonoLoaded().ToString());
+
+        GUILayout.Space(10);
+        
+        PropertyLabel("Rest Base URL", MDMulti.Rest.ServerUrl);
+        PropertyLabel("Protocol Version", MDMulti.Rest.ProtocolVersion.ToString());
 
         GUILayout.Space(10);
 
-        GUILayout.Label("Rest Information", EditorStyles.boldLabel);
-        PropertyLabel("Base URL", MDMulti.Rest.ServerUrl);
-        PropertyLabel("Protocol Version", MDMulti.Rest.ProtocolVersion.ToString());
         PropertyLabel("Broadcasting?", MDMulti.EditorExternalFactors.MulticastBroadcastActive.ToString());
     }
 
