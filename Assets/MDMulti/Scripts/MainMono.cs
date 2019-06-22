@@ -9,7 +9,6 @@ namespace MDMulti
         public void Start()
         {
             Mono = this;
-            Multicast.Connect();
         }
 
         public static bool InScene()

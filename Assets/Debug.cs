@@ -16,12 +16,17 @@ namespace MDMulti.Mono
             User.Create("unity_test");
         }
 
-        public void getTest()
+        public void GetTest()
         {
             StartCoroutine(Rest.Get("info", res =>
             {
                 UnityEngine.Debug.Log(res.ResponseData());
             }));
+        }
+
+        public void MulticastBroadcast()
+        {
+            Multicast.Broadcast();
         }
     }
 }
