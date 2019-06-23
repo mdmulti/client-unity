@@ -5,15 +5,13 @@ using System.Net.Sockets;
 using System.Text;
 using UnityEngine;
 
-namespace MDMulti
+namespace MDMulti.LAN.Discovery.Providers
 {
     public class Multicast
     {
         public static readonly string MulticastAddressString = Mono.Options.Instance.multicast.ip;
 
-        private static WaitForSeconds waitForSeconds = new WaitForSeconds(Mono.Options.Instance.multicast.broadcastDelay);
-
-        public static Opts SetupForBroadcast()
+        public static Opts Setup()
         {
             UdpClient udpclient = new UdpClient();
 
@@ -21,41 +19,35 @@ namespace MDMulti
             udpclient.JoinMulticastGroup(multicastaddress);
             IPEndPoint remoteep = new IPEndPoint(multicastaddress, Mono.Options.Instance.multicast.port);
 
-            Byte[] buffer = null;
-
-            Message message = new Message();
-            message.applicationName = Mono.Options.Instance.appName;
-            buffer = Encoding.Unicode.GetBytes(JsonUtility.ToJson(message));
-
-            Debug.Log("Message: " + JsonUtility.ToJson(message));
+            Byte[] buffer = new Message().Buffer();
 
             return new Opts(udpclient, buffer, remoteep);
         }
 
-        private static IEnumerator Broadcast(UdpClient udpclient, Byte[] buffer, IPEndPoint remoteep)
+        private static IEnumerator Send(UdpClient udpclient, Byte[] buffer, IPEndPoint remoteep)
         {
             while (true) {
                 udpclient.Send(buffer, buffer.Length, remoteep);
-                Debug.Log("Sent " + Time.frameCount);
-                yield return waitForSeconds;
+                Debug.Log("Sent Multicast on frame " + Time.frameCount);
+                yield return Core.waitForSeconds;
             }
         }
 
         private static bool isBroadcasting = false;
         private static Coroutine coroutineInstance;
 
-        public static void StartBroadcasting(Opts o)
+        public static void Start(Opts o)
         {
             if (!isBroadcasting)
             {
-                coroutineInstance = Mono.Main.Inst.StartCoroutine(Broadcast(o.udpclient, o.buffer, o.remoteep));
+                coroutineInstance = Mono.Main.Inst.StartCoroutine(Send(o.udpclient, o.buffer, o.remoteep));
                 isBroadcasting = true;
             }
 
-            EditorExternalFactors.MulticastBroadcastActive = isBroadcasting;
+            EditorExternalFactors.MulticastActive = isBroadcasting;
         }
 
-        public static void StopBroadcasting()
+        public static void Stop()
         {
             if (isBroadcasting)
             {
@@ -63,7 +55,7 @@ namespace MDMulti
                 isBroadcasting = false;
             }
 
-            EditorExternalFactors.MulticastBroadcastActive = isBroadcasting;
+            EditorExternalFactors.MulticastActive = isBroadcasting;
         }
 
         [Serializable]
@@ -78,26 +70,6 @@ namespace MDMulti
                 this.udpclient = udpclient;
                 this.buffer = buffer;
                 this.remoteep = remoteep;
-            }
-        }
-
-        /// <summary>
-        /// Class for creating Multicast messages.
-        /// </summary>
-        [Serializable]
-        public class Message
-        {
-            public string server;
-            public int protocolVersion;
-            public string applicationName;
-
-            /// <summary>
-            /// Constructor for creating Multicast messages.
-            /// </summary>
-            public Message()
-            {
-                server = "MDMulti";
-                protocolVersion = Rest.ProtocolVersion;
             }
         }
     }

@@ -24,7 +24,8 @@ public class MDMultiInfo : EditorWindow {
 
         GUILayout.Space(10);
 
-        PropertyLabel("Broadcasting?", MDMulti.EditorExternalFactors.MulticastBroadcastActive.ToString());
+        PropertyLabel("Multicasting?", MDMulti.EditorExternalFactors.MulticastActive.ToString());
+        PropertyLabel("Broadcasting?", MDMulti.EditorExternalFactors.BroadcastActive.ToString());
     }
 
     void Update()

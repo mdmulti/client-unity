@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using MDMulti;
+using MDMulti.LAN.Discovery.Providers;
 
 public class DebugScene : MonoBehaviour
 {
@@ -16,13 +17,26 @@ public class DebugScene : MonoBehaviour
         }));
     }
 
-    public void MulticastBroadcastStart()
+    public void MulticastStart()
     {
-        Multicast.StartBroadcasting(Multicast.SetupForBroadcast());
+        Multicast.Start(Multicast.Setup());
     }
 
-    public void MulticastBroadcastStop()
+    public void MulticastStop()
     {
-        Multicast.StopBroadcasting();
+        Multicast.Stop();
+    }
+
+    private Broadcast.Opts broadcastOpts;
+
+    public void BroadcastStart()
+    {
+        broadcastOpts = Broadcast.Setup();
+        Broadcast.Start(broadcastOpts);
+    }
+
+    public void BroadcastStop()
+    {
+        Broadcast.Stop(broadcastOpts);
     }
 }
