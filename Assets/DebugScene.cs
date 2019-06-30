@@ -39,4 +39,11 @@ public class DebugScene : MonoBehaviour
     {
         Broadcast.Stop(broadcastOpts);
     }
+
+    public void Latest()
+    {
+        Debug.Log("A");
+        //RestHelper.DownloadServerCertificate();
+        RestHelper.ConnectionTest();
+    }
 }
