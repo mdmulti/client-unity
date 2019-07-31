@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine.Networking;
 
 using Debug = UnityEngine.Debug;
@@ -30,6 +31,21 @@ namespace MDMulti
             else
             {
                 onComplete(new RequestResponse(ResponseTypes.GET, www));
+            }
+        }
+
+        public static async Task<RequestResponse> GetAsync(string path)
+        {
+            UnityWebRequest www = UnityWebRequest.Get(ConstructUrl(path));
+            await www.SendWebRequest();
+
+            if (www.isNetworkError || www.isHttpError)
+            {
+                return (new RequestResponse(ResponseTypes.ERR, www));
+            }
+            else
+            {
+                return (new RequestResponse(ResponseTypes.GET, www));
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using Debug = UnityEngine.Debug;
+﻿using System.Threading.Tasks;
+using Debug = UnityEngine.Debug;
 
 namespace MDMulti
 {
@@ -15,13 +16,9 @@ namespace MDMulti
             }));
         }
 
-        public static void ConnectionTest()
+        public static async Task<bool> ConnectionTest()
         {
-            Mono.Main.Inst.StartCoroutine(Rest.Get("info", res =>
-            {
-                Debug.Log("CT-X");
-                Debug.Log(res.ResponseCode() == 200);
-            }));
+            return (await Rest.GetAsync("info")).ResponseCode() == 200;
         }
     }
 }

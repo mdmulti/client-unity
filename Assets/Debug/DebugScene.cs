@@ -40,10 +40,10 @@ public class DebugScene : MonoBehaviour
         Broadcast.Stop(broadcastOpts);
     }
 
-    public void Latest()
+    public async void Latest()
     {
         Debug.Log("A");
         //RestHelper.DownloadServerCertificate();
-        RestHelper.ConnectionTest();
+        Debug.Log(await RestHelper.ConnectionTest());
     }
 }
