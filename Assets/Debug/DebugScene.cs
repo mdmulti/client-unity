@@ -6,7 +6,7 @@ public class DebugScene : MonoBehaviour
 {
     public void CreateUser()
     {
-        User.Create("unity_test");
+        User.Create();
     }
 
     public void GetTest()
@@ -45,5 +45,10 @@ public class DebugScene : MonoBehaviour
         Debug.Log("A");
         //RestHelper.DownloadServerCertificate();
         Debug.Log(await RestHelper.ConnectionTest());
+    }
+
+    public void GetServerCert()
+    {
+        RestHelper.DownloadServerCertificate();
     }
 }

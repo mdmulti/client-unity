@@ -12,7 +12,7 @@ namespace MDMulti
             {
                 Debug.Log("CERT: " + res.ContentType());
                 Debug.Log("Cert: " + res.ResponseData());
-                StorageHelper.SaveToFile(res.ResponseData(), "server-public.crt");
+                StorageHelper.SaveToFile(res.ResponseData(), res.ServerCertSerial() + ".server-public.crt");
             }));
         }
 

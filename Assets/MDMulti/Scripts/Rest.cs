@@ -119,6 +119,22 @@ namespace MDMulti
 
                 return request.GetResponseHeader("Content-Type");
             }
+
+            public string ServerCertSerial()
+            {
+                // error type checking
+                if (type == ResponseTypes.ERR) return null;
+
+                return request.GetResponseHeader("X-MDM-ServerCert-Serial");
+            }
+
+            public Dictionary<string, string> Headers()
+            {
+                // error type checking
+                if (type == ResponseTypes.ERR) return null;
+
+                return request.GetResponseHeaders();
+            }
         }
     }
 }
