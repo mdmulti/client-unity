@@ -1,41 +1,45 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class UserPanelMono : MonoBehaviour
+namespace MDMulti.Panels
 {
-    public Color inactiveBarColor;
-    public Color activeBarColor;
-
-    public GameObject userImage;
-    public Text text;
-
-    private bool authenticated = false;
-
-    // Start is called before the first frame update
-    void Start()
+    public class UserPanelMono : MonoBehaviour
     {
-        Debug.Log(userImage.GetComponent<Image>().mainTexture.name);
+        public Color inactiveBarColor;
+        public Color activeBarColor;
 
-        if (!authenticated) setUnAuthDisplay();
-    }
+        public GameObject userImage;
+        public Text text;
 
-    // Update is called once per frame
-    void Update()
-    {
+        private bool authenticated = false;
 
-    }
-
-    public void onClick()
-    {
-        if (!authenticated)
+        // Start is called before the first frame update
+        void Start()
         {
-            Debug.Log("Attempted Sign in.");
+            Debug.Log(userImage.GetComponent<Image>().mainTexture.name);
+
+            if (!authenticated) setUnAuthDisplay();
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
+
+        public void onClick()
+        {
+            if (!authenticated)
+            {
+                Debug.Log("Attempted Sign in.");
+            }
+        }
+
+        void setUnAuthDisplay()
+        {
+            GetComponent<Image>().color = inactiveBarColor;
+            text.text = "Sign in";
         }
     }
-
-    void setUnAuthDisplay()
-    {
-        GetComponent<Image>().color = inactiveBarColor;
-        text.text = "Sign in";
-    }
 }
+
