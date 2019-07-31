@@ -29,6 +29,27 @@ namespace MDMulti.Panels
 
             // Set the result image
             display.sprite = (active == true ? successfulGraphic : failedGraphic);
+
+            // Enable the built-in button to restart
+            GetComponent<Button>().enabled = true;
+        }
+
+        public void Restart()
+        {
+            // Disable the White Circle Image / Mask
+            GetComponent<Image>().enabled = false;
+
+            // Disable the result image
+            display.enabled = false;
+
+            // Activate the loading circle
+            animatedLoadingCircle.SetActive(true);
+
+            // Disable the restart button
+            GetComponent<Button>().enabled = false;
+
+            // Run the start script
+            Start();
         }
     }
 
