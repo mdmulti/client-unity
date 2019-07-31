@@ -25,14 +25,13 @@ public class ConnectionTest : Core
         {
             try
             {
-                Debug.Log("TESTING");
                 MDMulti.Mono.Main.Inst.StartCoroutine(Rest.Get("info", res =>
                 {
-                    EditorUtility.DisplayDialog("MDMulti", "Connection test " + ((res.ResponseCode() == 200) ? "passed!" : "failed."), "OK", "");
+                    EditorUtility.DisplayDialog("MDMulti Connection Test", "Connection test " + ((res.ResponseCode() == 200) ? "passed!" : "failed."), "OK", "");
                 }));
             } catch (System.Exception)
             {
-                Debug.LogWarning(helpMessage);
+                EditorUtility.DisplayDialog("MDMulti Connection Test", helpMessage, "OK");
             }
         }
         EditorGUILayout.HelpBox(helpMessage, MessageType.Warning);
