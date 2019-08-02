@@ -23,7 +23,6 @@ namespace MDMulti
             {
                 return false;
             }
-            
         }
 
         public static string NAT()
@@ -36,7 +35,28 @@ namespace MDMulti
 
             // Return a data string
             return result.NetType.ExtendedMessage;
-            
+        }
+
+        public static string WANIP()
+        {
+            // Create new socket for STUN client.
+            Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+
+            // Query STUN server
+            Result result = Client.Query("stun.l.google.com", 19302, s);
+
+            string ip;
+            // If the PublicEndPoint (public IP / port used for the connection) is null
+            if (result.PublicEndPoint == null)
+            {
+                ip = "Not Available";
+            } else
+            {
+                ip = result.PublicEndPoint.Address.ToString();
+            }
+
+            // Return the data
+            return ip;
         }
     }
 }

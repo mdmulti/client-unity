@@ -45,7 +45,7 @@ public class DebugScene : MonoBehaviour
         Debug.Log("A");
         //RestHelper.DownloadServerCertificate();
         //Debug.Log(await RestHelper.ConnectionTest());
-        Debug.Log(ConnectionTests.NAT());
+        Debug.Log(ConnectionTests.WANIP());
     }
 
     public void GetServerCert()
