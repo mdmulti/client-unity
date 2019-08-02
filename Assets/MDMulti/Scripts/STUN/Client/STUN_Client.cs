@@ -1,6 +1,8 @@
+// Original project copyright (c) Ivar Lumi 2007
+// Licensed under CPOL. See CPOL.html for more details.
+// https://www.codeproject.com/Articles/18492/STUN-Client
+
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Net;
 using System.Net.Sockets;
 
@@ -55,7 +57,7 @@ namespace LumiSoft.Net.STUN.Client
                 throw new ArgumentException("Socket must be UDP socket !");
             }
 
-            IPEndPoint remoteEndPoint = new IPEndPoint(System.Net.Dns.GetHostAddresses(host)[0],port);
+            IPEndPoint remoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(host)[0],port);
             
             socket.ReceiveTimeout = 3000;
             socket.SendTimeout = 3000;

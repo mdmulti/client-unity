@@ -1,6 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+// Original project copyright (c) Ivar Lumi 2007
+// Licensed under CPOL. See CPOL.html for more details.
+// https://www.codeproject.com/Articles/18492/STUN-Client
+
 using System.Net;
 
 namespace LumiSoft.Net.STUN.Client
