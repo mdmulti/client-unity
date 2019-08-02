@@ -56,6 +56,12 @@
                     NATLevel = 0;
                     break;
 
+                case NetType.NotAvailable:
+                    Message = "Not Available";
+                    ExtendedMessage = "Not Available (Check your network?)";
+                    NATLevel = 0;
+                    break;
+
                 default:
                     Message = "Unknown";
                     ExtendedMessage = Message;

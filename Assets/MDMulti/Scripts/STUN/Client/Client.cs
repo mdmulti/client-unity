@@ -57,7 +57,15 @@ namespace MDMulti.STUN.Client
                 throw new ArgumentException("Socket must be UDP socket !");
             }
 
-            IPEndPoint remoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(host)[0],port);
+            // Add try/catch to if the host cannot be resolved
+            IPEndPoint remoteEndPoint = null;
+            try
+            {
+                remoteEndPoint = new IPEndPoint(Dns.GetHostAddresses(host)[0], port);
+            } catch(SocketException)
+            {
+                return new Result(NetType.NotAvailable, null);
+            }
             
             socket.ReceiveTimeout = 3000;
             socket.SendTimeout = 3000;

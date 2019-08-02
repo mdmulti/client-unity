@@ -54,6 +54,11 @@ namespace MDMulti.STUN.Client
         /// a different destination, a different mapping is used. Furthermore, only the external host that
         /// receives a packet can send a UDP packet back to the internal host.
         /// </summary>
-        Symmetric
+        Symmetric,
+
+        /// <summary>
+        /// NetType not available, usually due to a network error, such as not having an internet connection.
+        /// </summary>
+        NotAvailable
     }
 }
