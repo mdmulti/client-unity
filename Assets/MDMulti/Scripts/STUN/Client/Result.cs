@@ -11,7 +11,7 @@ namespace MDMulti.STUN.Client
     /// </summary>
     public class Result
     {
-        private NetType m_NetType = NetType.OpenInternet;
+        private NetType m_NetType = STUN.Client.NetType.OpenInternet;
         private IPEndPoint m_pPublicEndPoint = null;
 
         /// <summary>
@@ -29,11 +29,19 @@ namespace MDMulti.STUN.Client
         #region Properties Implementation
 
         /// <summary>
-        /// Gets UDP network type.
+        /// Gets UDP network type as an enum.
         /// </summary>
-        public NetType NetType
+        public NetType NetTypeEnum
         {
             get{ return m_NetType; }
+        }
+
+        /// <summary>
+        /// Gets a user friendly UDP network type format response.
+        /// </summary>
+        public NetTypeConverter NetType
+        {
+            get { return new NetTypeConverter(m_NetType); }
         }
 
         /// <summary>

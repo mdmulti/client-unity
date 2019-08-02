@@ -1,5 +1,7 @@
 ﻿using System.Net.Sockets;
 
+using MDMulti.STUN.Client;
+
 namespace MDMulti
 {
     public class ConnectionTests
@@ -30,8 +32,11 @@ namespace MDMulti
             Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
             // Query STUN server
-            STUN.Client.Result result = STUN.Client.Client.Query("stun.l.google.com", 19302, s);
-            return result.NetType.ToString();
+            Result result = Client.Query("stun.l.google.com", 19302, s);
+
+            // Return a data string
+            return result.NetType.ExtendedMessage;
+            
         }
     }
 }
