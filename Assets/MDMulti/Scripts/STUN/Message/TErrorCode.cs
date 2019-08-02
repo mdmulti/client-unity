@@ -2,12 +2,12 @@
 // Licensed under CPOL. See CPOL.html for more details.
 // https://www.codeproject.com/Articles/18492/STUN-Client
 
-namespace LumiSoft.Net.STUN.Message
+namespace MDMulti.STUN.Message
 {
     /// <summary>
     /// This class implements STUN ERROR-CODE. Defined in RFC 3489 11.2.9.
     /// </summary>
-    public class STUN_t_ErrorCode
+    public class TErrorCode
     {
         private int    m_Code       = 0;
         private string m_ReasonText = "";
@@ -17,7 +17,7 @@ namespace LumiSoft.Net.STUN.Message
         /// </summary>
         /// <param name="code">Error code.</param>
         /// <param name="reasonText">Reason text.</param>
-        public STUN_t_ErrorCode(int code,string reasonText)
+        public TErrorCode(int code,string reasonText)
         {
             m_Code       = code;
             m_ReasonText = reasonText;

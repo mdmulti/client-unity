@@ -2,12 +2,12 @@
 // Licensed under CPOL. See CPOL.html for more details.
 // https://www.codeproject.com/Articles/18492/STUN-Client
 
-namespace LumiSoft.Net.STUN.Client
+namespace MDMulti.STUN.Client
 {
     /// <summary>
     /// Specifies UDP network type.
     /// </summary>
-    public enum STUN_NetType
+    public enum NetType
     {
         /// <summary>
         /// UDP is always blocked.

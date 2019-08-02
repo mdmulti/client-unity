@@ -6,12 +6,12 @@ using System;
 using System.Text;
 using System.Net;
 
-namespace LumiSoft.Net.STUN.Message
+namespace MDMulti.STUN.Message
 {
     /// <summary>
     /// Implements STUN message. Defined in RFC 3489.
     /// </summary>
-    public class STUN_Message
+    public class MessageC
     {
         #region enum AttributeType
 
@@ -51,23 +51,23 @@ namespace LumiSoft.Net.STUN.Message
 
         #endregion
 
-        private STUN_MessageType     m_Type             = STUN_MessageType.BindingRequest;
-        private Guid                 m_pTransactionID   = Guid.Empty;
-        private IPEndPoint           m_pMappedAddress   = null;
-        private IPEndPoint           m_pResponseAddress = null;
-        private STUN_t_ChangeRequest m_pChangeRequest   = null;
-        private IPEndPoint           m_pSourceAddress   = null;
-        private IPEndPoint           m_pChangedAddress  = null;
-        private string               m_UserName         = null;
-        private string               m_Password         = null;
-        private STUN_t_ErrorCode     m_pErrorCode       = null;
-        private IPEndPoint           m_pReflectedFrom   = null;
-        private string               m_ServerName       = null;
+        private MessageType m_Type = MessageType.BindingRequest;
+        private Guid m_pTransactionID   = Guid.Empty;
+        private IPEndPoint m_pMappedAddress = null;
+        private IPEndPoint m_pResponseAddress = null;
+        private TChangeRequest m_pChangeRequest = null;
+        private IPEndPoint m_pSourceAddress = null;
+        private IPEndPoint m_pChangedAddress = null;
+        private string m_UserName = null;
+        private string m_Password = null;
+        private TErrorCode m_pErrorCode = null;
+        private IPEndPoint m_pReflectedFrom = null;
+        private string m_ServerName = null;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public STUN_Message()
+        public MessageC()
         {
             m_pTransactionID = Guid.NewGuid();
         }
@@ -112,23 +112,23 @@ namespace LumiSoft.Net.STUN.Message
 
             // STUN Message Type
             int messageType = (data[offset++] << 8 | data[offset++]);
-            if(messageType == (int)STUN_MessageType.BindingErrorResponse){
-                m_Type = STUN_MessageType.BindingErrorResponse;
+            if(messageType == (int)MessageType.BindingErrorResponse){
+                m_Type = MessageType.BindingErrorResponse;
             }
-            else if(messageType == (int)STUN_MessageType.BindingRequest){
-                m_Type = STUN_MessageType.BindingRequest;
+            else if(messageType == (int)MessageType.BindingRequest){
+                m_Type = MessageType.BindingRequest;
             }
-            else if(messageType == (int)STUN_MessageType.BindingResponse){
-                m_Type = STUN_MessageType.BindingResponse;
+            else if(messageType == (int)MessageType.BindingResponse){
+                m_Type = MessageType.BindingResponse;
             }
-            else if(messageType == (int)STUN_MessageType.SharedSecretErrorResponse){
-                m_Type = STUN_MessageType.SharedSecretErrorResponse;
+            else if(messageType == (int)MessageType.SharedSecretErrorResponse){
+                m_Type = MessageType.SharedSecretErrorResponse;
             }
-            else if(messageType == (int)STUN_MessageType.SharedSecretRequest){
-                m_Type = STUN_MessageType.SharedSecretRequest;
+            else if(messageType == (int)MessageType.SharedSecretRequest){
+                m_Type = MessageType.SharedSecretRequest;
             }
-            else if(messageType == (int)STUN_MessageType.SharedSecretResponse){
-                m_Type = STUN_MessageType.SharedSecretResponse;
+            else if(messageType == (int)MessageType.SharedSecretResponse){
+                m_Type = MessageType.SharedSecretResponse;
             }
             else{
                 throw new ArgumentException("Invalid STUN message type value !");
@@ -397,7 +397,7 @@ namespace LumiSoft.Net.STUN.Message
                 // Skip 3 bytes
                 offset += 3;
                                 
-                m_pChangeRequest = new STUN_t_ChangeRequest((data[offset] & 4) != 0,(data[offset] & 2) != 0);
+                m_pChangeRequest = new TChangeRequest((data[offset] & 4) != 0,(data[offset] & 2) != 0);
                 offset++;
             }
             // SOURCE-ADDRESS
@@ -436,7 +436,7 @@ namespace LumiSoft.Net.STUN.Message
 
                 int errorCode = (data[offset + 2] & 0x7) * 100 + (data[offset + 3] & 0xFF);
 
-                m_pErrorCode = new STUN_t_ErrorCode(errorCode,Encoding.Default.GetString(data,offset + 4,length - 4));
+                m_pErrorCode = new TErrorCode(errorCode,Encoding.Default.GetString(data,offset + 4,length - 4));
                 offset += length;
             }
             // UNKNOWN-ATTRIBUTES
@@ -557,7 +557,7 @@ namespace LumiSoft.Net.STUN.Message
         /// <summary>
         /// Gets STUN message type.
         /// </summary>
-        public STUN_MessageType Type
+        public MessageType Type
         {
             get{ return m_Type; }
 
@@ -597,7 +597,7 @@ namespace LumiSoft.Net.STUN.Message
         /// Gets or sets how and where STUN server must send response back to STUN client.
         /// Value null means not specified.
         /// </summary>
-        public STUN_t_ChangeRequest ChangeRequest
+        public TChangeRequest ChangeRequest
         {
             get{ return m_pChangeRequest; }
 
@@ -651,7 +651,7 @@ namespace LumiSoft.Net.STUN.Message
         /// <summary>
         /// Gets or sets error info. Returns null if not specified.
         /// </summary>
-        public STUN_t_ErrorCode ErrorCode
+        public TErrorCode ErrorCode
         {
             get{ return m_pErrorCode; }
 

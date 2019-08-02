@@ -2,12 +2,12 @@
 // Licensed under CPOL. See CPOL.html for more details.
 // https://www.codeproject.com/Articles/18492/STUN-Client
 
-namespace LumiSoft.Net.STUN.Message
+namespace MDMulti.STUN.Message
 {
     /// <summary>
     /// This class implements STUN CHANGE-REQUEST attribute. Defined in RFC 3489 11.2.4.
     /// </summary>
-    public class STUN_t_ChangeRequest
+    public class TChangeRequest
     {
         private bool m_ChangeIP   = true;
         private bool m_ChangePort = true;
@@ -15,7 +15,7 @@ namespace LumiSoft.Net.STUN.Message
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public STUN_t_ChangeRequest()
+        public TChangeRequest()
         {
         }
 
@@ -24,7 +24,7 @@ namespace LumiSoft.Net.STUN.Message
         /// </summary>
         /// <param name="changeIP">Specifies if STUN server must send response to different IP than request was received.</param>
         /// <param name="changePort">Specifies if STUN server must send response to different port than request was received.</param>
-        public STUN_t_ChangeRequest(bool changeIP,bool changePort)
+        public TChangeRequest(bool changeIP,bool changePort)
         {
             m_ChangeIP = changeIP;
             m_ChangePort = changePort;

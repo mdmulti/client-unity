@@ -2,12 +2,12 @@
 // Licensed under CPOL. See CPOL.html for more details.
 // https://www.codeproject.com/Articles/18492/STUN-Client
 
-namespace LumiSoft.Net.STUN.Message
+namespace MDMulti.STUN.Message
 {
     /// <summary>
     /// This enum specifies STUN message type.
     /// </summary>
-    public enum STUN_MessageType
+    public enum MessageType
     {
         /// <summary>
         /// STUN message is binding request.

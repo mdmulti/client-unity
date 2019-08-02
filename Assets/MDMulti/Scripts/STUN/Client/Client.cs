@@ -6,9 +6,9 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 
-using LumiSoft.Net.STUN.Message;
+using MDMulti.STUN.Message;
 
-namespace LumiSoft.Net.STUN.Client
+namespace MDMulti.STUN.Client
 {
     /// <summary>
     /// This class implements STUN client. Defined in RFC 3489.
@@ -20,8 +20,8 @@ namespace LumiSoft.Net.STUN.Client
     /// socket.Bind(new IPEndPoint(IPAddress.Any,0));
     /// 
     /// // Query STUN server
-    /// STUN_Result result = STUN_Client.Query("stunserver.org",3478,socket);
-    /// if(result.NetType != STUN_NetType.UdpBlocked){
+    /// Result result = Client.Query("stunserver.org",3478,socket);
+    /// if(result.NetType != NetType.UdpBlocked){
     ///     // UDP blocked or !!!! bad STUN server
     /// }
     /// else{
@@ -30,7 +30,7 @@ namespace LumiSoft.Net.STUN.Client
     /// }
     /// </code>
     /// </example>
-    public class STUN_Client
+    public class Client
     {
         #region static method Query
 
@@ -42,7 +42,7 @@ namespace LumiSoft.Net.STUN.Client
         /// <param name="socket">UDP socket to use.</param>
         /// <returns>Returns UDP netwrok info.</returns>
         /// <exception cref="Exception">Throws exception if unexpected error happens.</exception>
-        public static STUN_Result Query(string host,int port,Socket socket)
+        public static Result Query(string host,int port,Socket socket)
         {
             if(host == null){
                 throw new ArgumentNullException("host");
@@ -118,38 +118,38 @@ namespace LumiSoft.Net.STUN.Client
             */
 
             // Test I
-            STUN_Message test1 = new STUN_Message();
-            test1.Type = STUN_MessageType.BindingRequest;
-            STUN_Message test1response = DoTransaction(test1,socket,remoteEndPoint);
+            MessageC test1 = new MessageC();
+            test1.Type = MessageType.BindingRequest;
+            MessageC test1response = DoTransaction(test1,socket,remoteEndPoint);
     
             // UDP blocked.
             if(test1response == null){
-                return new STUN_Result(STUN_NetType.UdpBlocked,null);
+                return new Result(NetType.UdpBlocked,null);
             }
             else{
                 // Test II
-                STUN_Message test2 = new STUN_Message();
-                test2.Type = STUN_MessageType.BindingRequest;
-                test2.ChangeRequest = new STUN_t_ChangeRequest(true,true);
+                MessageC test2 = new MessageC();
+                test2.Type = MessageType.BindingRequest;
+                test2.ChangeRequest = new TChangeRequest(true,true);
 
                 // No NAT.
                 if(socket.LocalEndPoint.Equals(test1response.MappedAddress)){
-                    STUN_Message test2Response = DoTransaction(test2,socket,remoteEndPoint);
+                    MessageC test2Response = DoTransaction(test2,socket,remoteEndPoint);
                     // Open Internet.
                     if(test2Response != null){
-                        return new STUN_Result(STUN_NetType.OpenInternet,test1response.MappedAddress);
+                        return new Result(NetType.OpenInternet,test1response.MappedAddress);
                     }
                     // Symmetric UDP firewall.
                     else{
-                        return new STUN_Result(STUN_NetType.SymmetricUdpFirewall,test1response.MappedAddress);
+                        return new Result(NetType.SymmetricUdpFirewall,test1response.MappedAddress);
                     }
                 }
                 // NAT
                 else{
-                    STUN_Message test2Response = DoTransaction(test2,socket,remoteEndPoint);
+                    MessageC test2Response = DoTransaction(test2,socket,remoteEndPoint);
                     // Full cone NAT.
                     if(test2Response != null){
-                        return new STUN_Result(STUN_NetType.FullCone,test1response.MappedAddress);
+                        return new Result(NetType.FullCone,test1response.MappedAddress);
                     }
                     else{
                         /*
@@ -158,32 +158,32 @@ namespace LumiSoft.Net.STUN.Client
                         */
 
                         // Test I(II)
-                        STUN_Message test12 = new STUN_Message();
-                        test12.Type = STUN_MessageType.BindingRequest;
+                        MessageC test12 = new MessageC();
+                        test12.Type = MessageType.BindingRequest;
 
-                        STUN_Message test12Response = DoTransaction(test12,socket,test1response.ChangedAddress);
+                        MessageC test12Response = DoTransaction(test12,socket,test1response.ChangedAddress);
                         if(test12Response == null){
                             throw new Exception("STUN Test I(II) dind't get resonse !");
                         }
                         else{
                             // Symmetric NAT
                             if(!test12Response.MappedAddress.Equals(test1response.MappedAddress)){
-                                return new STUN_Result(STUN_NetType.Symmetric,test1response.MappedAddress);
+                                return new Result(NetType.Symmetric,test1response.MappedAddress);
                             }
                             else{
                                 // Test III
-                                STUN_Message test3 = new STUN_Message();
-                                test3.Type = STUN_MessageType.BindingRequest;
-                                test3.ChangeRequest = new STUN_t_ChangeRequest(false,true);
+                                MessageC test3 = new MessageC();
+                                test3.Type = MessageType.BindingRequest;
+                                test3.ChangeRequest = new TChangeRequest(false,true);
 
-                                STUN_Message test3Response = DoTransaction(test3,socket,test1response.ChangedAddress);
+                                MessageC test3Response = DoTransaction(test3,socket,test1response.ChangedAddress);
                                 // Restricted
                                 if(test3Response != null){
-                                    return new STUN_Result(STUN_NetType.RestrictedCone,test1response.MappedAddress);
+                                    return new Result(NetType.RestrictedCone,test1response.MappedAddress);
                                 }
                                 // Port restricted
                                 else{
-                                    return new STUN_Result(STUN_NetType.PortRestrictedCone,test1response.MappedAddress);
+                                    return new Result(NetType.PortRestrictedCone,test1response.MappedAddress);
                                 }
                             }
                         }
@@ -213,8 +213,8 @@ namespace LumiSoft.Net.STUN.Client
                 socket.SwitchToSSL_AsClient();                
 
                 // Send Shared Secret request.
-                STUN_Message sharedSecretRequest = new STUN_Message();
-                sharedSecretRequest.Type = STUN_MessageType.SharedSecretRequest;
+                Message sharedSecretRequest = new Message();
+                sharedSecretRequest.Type = MessageType.SharedSecretRequest;
                 socket.Write(sharedSecretRequest.ToByteData());
                 
                 // TODO: Parse message
@@ -224,8 +224,8 @@ namespace LumiSoft.Net.STUN.Client
                 byte[] receiveBuffer = new byte[256];
                 socket.RawSocket.Receive(receiveBuffer);
 
-                STUN_Message sharedSecretRequestResponse = new STUN_Message();
-                if(sharedSecretRequestResponse.Type == STUN_MessageType.SharedSecretResponse){
+                Message sharedSecretRequestResponse = new Message();
+                if(sharedSecretRequestResponse.Type == MessageType.SharedSecretResponse){
                 }
                 // Shared Secret Error or Unknown response, just try again.
                 else{
@@ -245,7 +245,7 @@ namespace LumiSoft.Net.STUN.Client
         /// <param name="socket">Socket to use for send/receive.</param>
         /// <param name="remoteEndPoint">Remote end point.</param>
         /// <returns>Returns transaction response or null if transaction failed.</returns>
-        private static STUN_Message DoTransaction(STUN_Message request,Socket socket,IPEndPoint remoteEndPoint)
+        private static MessageC DoTransaction(MessageC request,Socket socket,IPEndPoint remoteEndPoint)
         {                        
             byte[] requestBytes = request.ToByteData();                              
             DateTime startTime = DateTime.Now;
@@ -260,7 +260,7 @@ namespace LumiSoft.Net.STUN.Client
                         socket.Receive(receiveBuffer);
 
                         // Parse message
-                        STUN_Message response = new STUN_Message();
+                        MessageC response = new MessageC();
                         response.Parse(receiveBuffer);
 
                         // Check that transaction ID matches or not response what we want.

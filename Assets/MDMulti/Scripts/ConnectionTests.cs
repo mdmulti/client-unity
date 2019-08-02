@@ -1,5 +1,4 @@
 ﻿using System.Net.Sockets;
-using LumiSoft.Net.STUN.Client;
 
 namespace MDMulti
 {
@@ -31,7 +30,7 @@ namespace MDMulti
             Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
             // Query STUN server
-            STUN_Result result = STUN_Client.Query("stun.l.google.com", 19302, s);
+            STUN.Client.Result result = STUN.Client.Client.Query("stun.l.google.com", 19302, s);
             return result.NetType.ToString();
         }
     }

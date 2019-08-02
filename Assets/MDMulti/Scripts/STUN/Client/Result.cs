@@ -4,22 +4,22 @@
 
 using System.Net;
 
-namespace LumiSoft.Net.STUN.Client
+namespace MDMulti.STUN.Client
 {
     /// <summary>
     /// This class holds STUN_Client.Query method return data.
     /// </summary>
-    public class STUN_Result
+    public class Result
     {
-        private STUN_NetType m_NetType         = STUN_NetType.OpenInternet;
-        private IPEndPoint   m_pPublicEndPoint = null;
+        private NetType m_NetType = NetType.OpenInternet;
+        private IPEndPoint m_pPublicEndPoint = null;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="netType">Specifies UDP network type.</param>
         /// <param name="publicEndPoint">Public IP end point.</param>
-        public STUN_Result(STUN_NetType netType,IPEndPoint publicEndPoint)
+        public Result(NetType netType,IPEndPoint publicEndPoint)
         {            
             m_NetType = netType;
             m_pPublicEndPoint = publicEndPoint;
@@ -31,7 +31,7 @@ namespace LumiSoft.Net.STUN.Client
         /// <summary>
         /// Gets UDP network type.
         /// </summary>
-        public STUN_NetType NetType
+        public NetType NetType
         {
             get{ return m_NetType; }
         }
