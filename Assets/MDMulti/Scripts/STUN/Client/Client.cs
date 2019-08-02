@@ -13,23 +13,6 @@ namespace MDMulti.STUN.Client
     /// <summary>
     /// This class implements STUN client. Defined in RFC 3489.
     /// </summary>
-    /// <example>
-    /// <code>
-    /// // Create new socket for STUN client.
-    /// Socket socket = new Socket(AddressFamily.InterNetwork,SocketType.Dgram,ProtocolType.Udp);
-    /// socket.Bind(new IPEndPoint(IPAddress.Any,0));
-    /// 
-    /// // Query STUN server
-    /// Result result = Client.Query("stunserver.org",3478,socket);
-    /// if(result.NetType != NetType.UdpBlocked){
-    ///     // UDP blocked or !!!! bad STUN server
-    /// }
-    /// else{
-    ///     IPEndPoint publicEP = result.PublicEndPoint;
-    ///     // Do your stuff
-    /// }
-    /// </code>
-    /// </example>
     public class Client
     {
         #region static method Query
