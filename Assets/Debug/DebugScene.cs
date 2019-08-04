@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using MDMulti;
 using MDMulti.LAN.Discovery.Providers;
+using System.Threading;
 
 public class DebugScene : MonoBehaviour
 {
@@ -19,12 +20,14 @@ public class DebugScene : MonoBehaviour
 
     public void MulticastStart()
     {
-        Multicast.Start(Multicast.Setup());
+        Multicast.StartBroadcasting();
+        //Multicast.Start(Multicast.Setup());
     }
 
     public void MulticastStop()
     {
-        Multicast.Stop();
+        Multicast.StopBroadcasting();
+        //Multicast.Stop();
     }
 
     private Broadcast.Opts broadcastOpts;
@@ -45,7 +48,11 @@ public class DebugScene : MonoBehaviour
         Debug.Log("A");
         //RestHelper.DownloadServerCertificate();
         //Debug.Log(await RestHelper.ConnectionTest());
-        Debug.Log(ConnectionTests.WANIP());
+        //Debug.Log(ConnectionTests.WANIP());
+        
+        //var cts = new CancellationTokenSource();
+        //await Multicast.BeginAnnouncingAsync(cts.Token);
+        //cts.Cancel();
     }
 
     public void GetServerCert()

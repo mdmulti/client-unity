@@ -4,6 +4,6 @@ namespace MDMulti.LAN.Discovery
 {
     public class Core
     {
-        public static WaitForSeconds waitForSeconds = new WaitForSeconds(Mono.Options.Instance.multicast.broadcastDelay);
+        public static WaitForSeconds waitForSeconds = new WaitForSeconds(1.5f);
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace MDMulti.LAN.Discovery
 {
     /// <summary>
-    /// Class for creating Multicast messages.
+    /// Class for creating Multicast / Broadcast messages.
     /// </summary>
     [Serializable]
     public class Message
@@ -15,7 +15,7 @@ namespace MDMulti.LAN.Discovery
         public string applicationName;
 
         /// <summary>
-        /// Constructor for creating Multicast messages.
+        /// Constructor for creating Multicast / Broadcast messages.
         /// </summary>
         public Message()
         {
@@ -26,7 +26,7 @@ namespace MDMulti.LAN.Discovery
 
         public byte[] Buffer()
         {
-           return Encoding.Unicode.GetBytes(JsonUtility.ToJson(this));
+           return Encoding.Unicode.GetBytes(server + "/" + protocolVersion + "/" + applicationName);
         }
     }
 }

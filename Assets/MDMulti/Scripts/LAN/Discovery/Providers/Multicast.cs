@@ -1,76 +1,60 @@
 ﻿using System;
-using System.Collections;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using UnityEngine;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MDMulti.LAN.Discovery.Providers
 {
     public class Multicast
     {
-        public static readonly string MulticastAddressString = Mono.Options.Instance.multicast.ip;
-
-        public static Opts Setup()
-        {
-            UdpClient udpclient = new UdpClient();
-
-            IPAddress multicastaddress = IPAddress.Parse(MulticastAddressString);
-            udpclient.JoinMulticastGroup(multicastaddress);
-            IPEndPoint remoteep = new IPEndPoint(multicastaddress, Mono.Options.Instance.multicast.port);
-
-            Byte[] buffer = new Message().Buffer();
-
-            return new Opts(udpclient, buffer, remoteep);
-        }
-
-        private static IEnumerator Send(UdpClient udpclient, Byte[] buffer, IPEndPoint remoteep)
-        {
-            while (true) {
-                udpclient.Send(buffer, buffer.Length, remoteep);
-                Debug.Log("Sent Multicast on frame " + Time.frameCount);
-                yield return Core.waitForSeconds;
-            }
-        }
-
         private static bool isBroadcasting = false;
-        private static Coroutine coroutineInstance;
 
-        public static void Start(Opts o)
+        private static CancellationTokenSource BroadcastCts = new CancellationTokenSource();
+
+        private static IPEndPoint BroadcastEndpoint = new IPEndPoint(IPAddress.Parse("224.5.125.85"), 29571);
+
+        private static async Task BeginBroadcastingAsync(CancellationToken token)
         {
-            if (!isBroadcasting)
-            {
-                coroutineInstance = Mono.Main.Inst.StartCoroutine(Send(o.udpclient, o.buffer, o.remoteep));
-                isBroadcasting = true;
-            }
+            byte[] buffer = new Message().Buffer();
+            var client = new UdpClient(AddressFamily.InterNetwork);
+            client.MulticastLoopback = true;
+            client.JoinMulticastGroup(BroadcastEndpoint.Address);
+            token.Register(() => client.Close());
 
-            EditorExternalFactors.MulticastActive = isBroadcasting;
+            try
+            {
+                while (true)
+                {
+                    await client.SendAsync(buffer, buffer.Length, BroadcastEndpoint).ConfigureAwait(false);
+                    await Task.Delay(TimeSpan.FromSeconds(1.5), token).ConfigureAwait(false);
+                }
+            }
+            catch (ObjectDisposedException)
+            {
+                token.ThrowIfCancellationRequested();
+                throw;
+            }
+            catch (TaskCanceledException)
+            {
+                // This occurs when you are waiting on a Task (in our case to wait 1.5 seconds) and it is cancelled. We can safely ignore this.
+            }
         }
 
-        public static void Stop()
+        public static async void StartBroadcasting()
         {
-            if (isBroadcasting)
-            {
-                Mono.Main.Inst.StopCoroutine(coroutineInstance);
-                isBroadcasting = false;
-            }
-
+            if (isBroadcasting) return;
+            isBroadcasting = true;
             EditorExternalFactors.MulticastActive = isBroadcasting;
+            await BeginBroadcastingAsync(BroadcastCts.Token);
+            
         }
 
-        [Serializable]
-        public class Opts
+        public static void StopBroadcasting()
         {
-            public UdpClient udpclient;
-            public Byte[] buffer;
-            public IPEndPoint remoteep;
-
-            public Opts(UdpClient udpclient, Byte[] buffer, IPEndPoint remoteep)
-            {
-                this.udpclient = udpclient;
-                this.buffer = buffer;
-                this.remoteep = remoteep;
-            }
+            BroadcastCts.Cancel();
+            isBroadcasting = false;
+            EditorExternalFactors.MulticastActive = isBroadcasting;
         }
     }
 }
