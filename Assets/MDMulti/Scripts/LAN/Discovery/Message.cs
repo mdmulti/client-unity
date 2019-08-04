@@ -26,7 +26,12 @@ namespace MDMulti.LAN.Discovery
 
         public byte[] Buffer()
         {
-           return Encoding.Unicode.GetBytes(server + "/" + protocolVersion + "/" + applicationName);
+           return Encoding.UTF8.GetBytes(server + "/" + protocolVersion + "/" + applicationName);
+        }
+
+        public string Header()
+        {
+            return server;// + "/" + protocolVersion + "/";
         }
     }
 }

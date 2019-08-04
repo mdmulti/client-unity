@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using MDMulti;
 using MDMulti.LAN.Discovery.Providers;
+using System.Threading;
 
 public class DebugScene : MonoBehaviour
 {
@@ -37,9 +38,11 @@ public class DebugScene : MonoBehaviour
         Broadcast.StopBroadcasting();
     }
 
-    public void Latest()
+    public async void Latest()
     {
         Debug.Log("A");
+        CancellationTokenSource cts = new CancellationTokenSource();
+        await Multicast.BeginListeningAsync(cts.Token);
     }
 
     public void GetServerCert()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -56,5 +57,56 @@ namespace MDMulti.LAN.Discovery.Providers
             isBroadcasting = false;
             EditorExternalFactors.MulticastActive = isBroadcasting;
         }
+
+        #region Receive
+
+        public static async Task BeginListeningAsync(CancellationToken token)
+        {
+            var client = new UdpClient(BroadcastEndpoint.Port);
+            client.JoinMulticastGroup(BroadcastEndpoint.Address);
+            token.Register(() => client.Close());
+
+            while (true)
+            {
+                token.ThrowIfCancellationRequested();
+                try
+                {
+                    var result = await client.ReceiveAsync();
+                    var data = Encoding.UTF8.GetString(result.Buffer);
+                    if (data.StartsWith(new Message().Header(), StringComparison.Ordinal))
+                    {
+                        /*if (ServerFound != null)
+                        {
+                            var details = new ServerDetails
+                            {
+                                Hostname = result.RemoteEndPoint.Address.ToString(),
+                                Port = int.Parse(data.Substring(Header.Length))
+                            };
+                            LoggingService.LogInfo("Found TunezServer at {0}", details.FullAddress);
+                            ServerFound(this, details);
+                        }*/
+                        UnityEngine.Debug.Log("MF: " + data);
+
+                    }
+                }
+                catch (ObjectDisposedException)
+                {
+                    token.ThrowIfCancellationRequested();
+                    throw;
+                }
+                catch (SocketException)
+                {
+                    token.ThrowIfCancellationRequested();
+                    // Ignore this
+                }
+                catch (Exception ex)
+                {
+                    token.ThrowIfCancellationRequested();
+                    UnityEngine.Debug.Log("Ignoring bad UDP " + ex);
+                }
+            }
+        }
+
+        #endregion
     }
 }
