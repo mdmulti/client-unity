@@ -1,78 +1,58 @@
 ﻿using System;
-using System.Collections;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using UnityEngine;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MDMulti.LAN.Discovery.Providers
 {
     public class Broadcast
     {
-        private static readonly int PORT = 25816;
+        private static bool isBroadcasting = false;
 
-        public static Opts Setup()
+        private static CancellationTokenSource BroadcastCts = new CancellationTokenSource();
+
+        private static IPEndPoint BroadcastEndpoint = new IPEndPoint(IPAddress.Parse("255.255.255.255"), 25816);
+
+        private static async Task BeginBroadcastingAsync(CancellationToken token)
         {
-            UdpClient udpclient = new UdpClient();
-            udpclient.Client.Bind(new IPEndPoint(IPAddress.Any, PORT));
-
             byte[] buffer = new Message().Buffer();
+            var client = new UdpClient(AddressFamily.InterNetwork);
+            token.Register(() => client.Close());
 
-            return new Opts(udpclient, buffer);
-        }
-
-        private static IEnumerator Send(UdpClient udpclient, byte[] buffer)
-        {
-            while (true)
+            try
             {
-                udpclient.Send(buffer, buffer.Length, "255.255.255.255", PORT);
-                Debug.Log("Sent Broadcast on frame " + Time.frameCount);
-                yield return Core.waitForSeconds;
+                while (true)
+                {
+                    await client.SendAsync(buffer, buffer.Length, BroadcastEndpoint).ConfigureAwait(false);
+                    await Task.Delay(TimeSpan.FromSeconds(1.5), token).ConfigureAwait(false);
+                }
+            }
+            catch (ObjectDisposedException)
+            {
+                token.ThrowIfCancellationRequested();
+                throw;
+            }
+            catch (TaskCanceledException)
+            {
+                // This occurs when you are waiting on a Task (in our case to wait 1.5 seconds) and it is cancelled. We can safely ignore this.
             }
         }
 
-        private static bool Active = false;
-        private static Coroutine coroutineInstance;
-
-        public static void Start(Opts o)
+        public static async void StartBroadcasting()
         {
-            if (!Active)
-            {
-                coroutineInstance = Mono.Main.Inst.StartCoroutine(Send(o.udpclient, o.buffer));
-                Active = true;
-            }
+            if (isBroadcasting) return;
+            isBroadcasting = true;
+            EditorExternalFactors.BroadcastActive = isBroadcasting;
+            await BeginBroadcastingAsync(BroadcastCts.Token);
 
-            EditorExternalFactors.BroadcastActive = Active;
         }
 
-        public static void Stop(Opts o)
+        public static void StopBroadcasting()
         {
-            if (Active)
-            {
-                // Stop the routine
-                Mono.Main.Inst.StopCoroutine(coroutineInstance);
-
-                // Close the connection, freeing the port
-                o.udpclient.Close();
-
-                // Set the boolean
-                Active = false;
-            }
-
-            EditorExternalFactors.BroadcastActive = Active;
-        }
-
-        [Serializable]
-        public class Opts
-        {
-            public UdpClient udpclient;
-            public Byte[] buffer;
-
-            public Opts(UdpClient udpclient, Byte[] buffer)
-            {
-                this.udpclient = udpclient;
-                this.buffer = buffer;
-            }
+            BroadcastCts.Cancel();
+            isBroadcasting = false;
+            EditorExternalFactors.BroadcastActive = isBroadcasting;
         }
     }
 }

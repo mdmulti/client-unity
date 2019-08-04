@@ -30,17 +30,14 @@ public class DebugScene : MonoBehaviour
         //Multicast.Stop();
     }
 
-    private Broadcast.Opts broadcastOpts;
-
     public void BroadcastStart()
     {
-        broadcastOpts = Broadcast.Setup();
-        Broadcast.Start(broadcastOpts);
+        Broadcast.StartBroadcasting();
     }
 
     public void BroadcastStop()
     {
-        Broadcast.Stop(broadcastOpts);
+        Broadcast.StopBroadcasting();
     }
 
     public void Latest()
