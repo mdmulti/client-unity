@@ -110,7 +110,7 @@ namespace MDMulti.STUN.Client
 
             // Test I
             MessageC test1 = new MessageC();
-            test1.Type = MessageType.BindingRequest;
+            test1.Type = Message.MessageType.BindingRequest;
             MessageC test1response = DoTransaction(test1,socket,remoteEndPoint);
     
             // UDP blocked.
@@ -120,7 +120,7 @@ namespace MDMulti.STUN.Client
             else{
                 // Test II
                 MessageC test2 = new MessageC();
-                test2.Type = MessageType.BindingRequest;
+                test2.Type = Message.MessageType.BindingRequest;
                 test2.ChangeRequest = new TChangeRequest(true,true);
 
                 // No NAT.
@@ -150,7 +150,7 @@ namespace MDMulti.STUN.Client
 
                         // Test I(II)
                         MessageC test12 = new MessageC();
-                        test12.Type = MessageType.BindingRequest;
+                        test12.Type = Message.MessageType.BindingRequest;
 
                         MessageC test12Response = DoTransaction(test12,socket,test1response.ChangedAddress);
                         if(test12Response == null){
@@ -164,7 +164,7 @@ namespace MDMulti.STUN.Client
                             else{
                                 // Test III
                                 MessageC test3 = new MessageC();
-                                test3.Type = MessageType.BindingRequest;
+                                test3.Type = Message.MessageType.BindingRequest;
                                 test3.ChangeRequest = new TChangeRequest(false,true);
 
                                 MessageC test3Response = DoTransaction(test3,socket,test1response.ChangedAddress);
