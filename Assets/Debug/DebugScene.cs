@@ -28,6 +28,16 @@ public class DebugScene : MonoBehaviour
         Multicast.StopBroadcasting();
     }
 
+    public void MulticastRXStart()
+    {
+        Multicast.StartListening();
+    }
+
+    public void MulticastRXStop()
+    {
+        Multicast.StopListening();
+    }
+
     public void BroadcastStart()
     {
         Broadcast.StartBroadcasting();
@@ -41,8 +51,6 @@ public class DebugScene : MonoBehaviour
     public async void Latest()
     {
         Debug.Log("A");
-        CancellationTokenSource cts = new CancellationTokenSource();
-        await Multicast.BeginListeningAsync(cts.Token);
     }
 
     public void GetServerCert()

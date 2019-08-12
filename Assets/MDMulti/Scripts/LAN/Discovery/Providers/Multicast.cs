@@ -9,11 +9,17 @@ namespace MDMulti.LAN.Discovery.Providers
 {
     public class Multicast
     {
+        #region Dual
+
+        private static IPEndPoint BroadcastEndpoint = new IPEndPoint(IPAddress.Parse("224.5.125.85"), 29571);
+
+        #endregion
+
+        #region Broadcast
+
         private static bool isBroadcasting = false;
 
         private static CancellationTokenSource BroadcastCts = new CancellationTokenSource();
-
-        private static IPEndPoint BroadcastEndpoint = new IPEndPoint(IPAddress.Parse("224.5.125.85"), 29571);
 
         private static async Task BeginBroadcastingAsync(CancellationToken token)
         {
@@ -58,9 +64,15 @@ namespace MDMulti.LAN.Discovery.Providers
             EditorExternalFactors.MulticastActive = isBroadcasting;
         }
 
+        #endregion
+
         #region Receive
 
-        public static async Task BeginListeningAsync(CancellationToken token)
+        private static bool isListening = false;
+
+        private static CancellationTokenSource ListenCts = new CancellationTokenSource();
+
+        private static async Task BeginListeningAsync(CancellationToken token)
         {
             var client = new UdpClient(BroadcastEndpoint.Port);
             client.JoinMulticastGroup(BroadcastEndpoint.Address);
@@ -94,6 +106,10 @@ namespace MDMulti.LAN.Discovery.Providers
                     token.ThrowIfCancellationRequested();
                     throw;
                 }
+                catch (TaskCanceledException)
+                {
+                    // This occurs when you are waiting on a Task (in our case to wait 1.5 seconds) and it is cancelled. We can safely ignore this.
+                }
                 catch (SocketException)
                 {
                     token.ThrowIfCancellationRequested();
@@ -105,6 +121,20 @@ namespace MDMulti.LAN.Discovery.Providers
                     UnityEngine.Debug.Log("Ignoring bad UDP " + ex);
                 }
             }
+        }
+
+        public static async void StartListening()
+        {
+            if (isListening) return;
+            isListening = true;
+            await BeginListeningAsync(ListenCts.Token);
+
+        }
+
+        public static void StopListening()
+        {
+            ListenCts.Cancel();
+            isListening = false;
         }
 
         #endregion
