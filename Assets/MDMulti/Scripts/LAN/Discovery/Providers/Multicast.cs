@@ -78,10 +78,10 @@ namespace MDMulti.LAN.Discovery.Providers
             client.JoinMulticastGroup(BroadcastEndpoint.Address);
             token.Register(() => client.Close());
 
-            while (true)
+            try
             {
                 token.ThrowIfCancellationRequested();
-                try
+                while (true)
                 {
                     var result = await client.ReceiveAsync();
                     var data = Encoding.UTF8.GetString(result.Buffer);
@@ -101,25 +101,20 @@ namespace MDMulti.LAN.Discovery.Providers
 
                     }
                 }
-                catch (ObjectDisposedException)
-                {
-                    token.ThrowIfCancellationRequested();
-                    throw;
-                }
-                catch (TaskCanceledException)
-                {
-                    // This occurs when you are waiting on a Task (in our case to wait 1.5 seconds) and it is cancelled. We can safely ignore this.
-                }
-                catch (SocketException)
-                {
-                    token.ThrowIfCancellationRequested();
-                    // Ignore this
-                }
-                catch (Exception ex)
-                {
-                    token.ThrowIfCancellationRequested();
-                    UnityEngine.Debug.Log("Ignoring bad UDP " + ex);
-                }
+            }
+            catch (ObjectDisposedException)
+            {
+                // This will happen when we cancel the task.  We can ignore this.
+            }
+            catch (SocketException)
+            {
+                token.ThrowIfCancellationRequested();
+                // Ignore this
+            }
+            catch (Exception ex)
+            {
+                token.ThrowIfCancellationRequested();
+                UnityEngine.Debug.Log("Ignoring bad UDP " + ex);
             }
         }
 
