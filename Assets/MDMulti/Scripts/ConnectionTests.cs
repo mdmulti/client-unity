@@ -1,4 +1,6 @@
-﻿using System.Net.Sockets;
+﻿using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 
 using MDMulti.STUN.Client;
 
@@ -57,6 +59,20 @@ namespace MDMulti
 
             // Return the data
             return ip;
+        }
+
+        public static IPAddress GetLANIP()
+        {
+            if (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+            {
+                return null;
+            }
+
+            IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+
+            return host
+                .AddressList
+                .FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
         }
     }
 }

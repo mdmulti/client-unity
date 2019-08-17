@@ -13,6 +13,9 @@ namespace MDMulti.LAN.Discovery
         public string server;
         public int protocolVersion;
         public string applicationName;
+        // There is no point temp storing the IP here as an IPAddress as it will be sent as a string anyway.
+        public string ip;
+        public int port;
 
         /// <summary>
         /// Constructor for creating Multicast / Broadcast messages.
@@ -22,11 +25,13 @@ namespace MDMulti.LAN.Discovery
             server = "MDMulti";
             protocolVersion = Rest.ProtocolVersion;
             applicationName = Mono.Options.Instance.appName;
+            ip = ConnectionTests.GetLANIP().ToString();
+            port = 69;
         }
 
         public byte[] Buffer()
         {
-           return Encoding.UTF8.GetBytes(server + "/" + protocolVersion + "/" + applicationName);
+           return Encoding.UTF8.GetBytes(server + "/" + protocolVersion + "/" + applicationName + "/" + ip + "/" + port);
         }
 
         public string Header()

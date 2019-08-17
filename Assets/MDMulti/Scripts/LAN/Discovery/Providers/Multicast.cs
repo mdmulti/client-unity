@@ -98,6 +98,23 @@ namespace MDMulti.LAN.Discovery.Providers
                             ServerFound(this, details);
                         }*/
                         UnityEngine.Debug.Log("MF: " + data);
+                        //ServerFoundEvent sfe = new ServerFoundEvent();
+                        ServerFoundEvent.serverFoundDel sfd = new ServerFoundEvent.serverFoundDel(TEST);
+                        ServerFoundEvent.OnServerFound += sfd;
+                        //ServerFoundEvent.RegisterFoundServer(new ServerDetails()
+                        //{
+                        //    IP = "0.0.0.0",
+                        //    Port = 123,
+                        //    DiscoveryMethod = DiscoveryMethod.Multicast
+                        //});
+                        string[] split = data.Split('/');
+                        ServerFoundEvent.RegisterFoundServer(new ServerDetails()
+                        {
+                            IP = split[3].ToString(),
+                            Port = int.Parse(split[4].ToString()),
+                            DiscoveryMethod = DiscoveryMethod.Multicast
+                        });
+                        ServerFoundEvent.OnServerFound -= sfd;
 
                     }
                 }
@@ -133,5 +150,10 @@ namespace MDMulti.LAN.Discovery.Providers
         }
 
         #endregion
+
+        public static void TEST(ServerDetails sd)
+        {
+            UnityEngine.Debug.Log("LISTM");
+        }
     }
 }
