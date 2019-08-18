@@ -98,15 +98,8 @@ namespace MDMulti.LAN.Discovery.Providers
                             ServerFound(this, details);
                         }*/
                         UnityEngine.Debug.Log("MF: " + data);
-                        //ServerFoundEvent sfe = new ServerFoundEvent();
                         ServerFoundEvent.serverFoundDel sfd = new ServerFoundEvent.serverFoundDel(TEST);
                         ServerFoundEvent.OnServerFound += sfd;
-                        //ServerFoundEvent.RegisterFoundServer(new ServerDetails()
-                        //{
-                        //    IP = "0.0.0.0",
-                        //    Port = 123,
-                        //    DiscoveryMethod = DiscoveryMethod.Multicast
-                        //});
                         string[] split = data.Split('/');
                         ServerFoundEvent.RegisterFoundServer(new ServerDetails()
                         {

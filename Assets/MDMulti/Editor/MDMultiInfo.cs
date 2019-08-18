@@ -1,37 +1,39 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using MDMulti.Editor;
 
-public class MDMultiInfo : Core
+namespace MDMulti.Editor
 {
-
-    [MenuItem("MDMulti/Info")]
-    static void Init()
+    public class MDMultiInfo : Core
     {
-        // Get existing open window or if none, make a new one:
-        MDMultiInfo window = (MDMultiInfo)GetWindow(typeof(MDMultiInfo));
-        window.Show();
-    }
 
-    void OnGUI()
-    {
-        GUILayout.Label("MDMulti Information", EditorStyles.boldLabel);
+        [MenuItem("MDMulti/Info")]
+        static void Init()
+        {
+            // Get existing open window or if none, make a new one:
+            MDMultiInfo window = (MDMultiInfo)GetWindow(typeof(MDMultiInfo), false, "MDMulti Info");
+            window.Show();
+        }
 
-        PropertyLabel("Services Loaded", MainMonoLoaded().ToString());
+        void OnGUI()
+        {
+            GUILayout.Label("MDMulti Information", EditorStyles.boldLabel);
 
-        GUILayout.Space(10);
+            PropertyLabel("Services Loaded", MainMonoLoaded().ToString());
 
-        PropertyLabel("Rest Base URL", MDMulti.Rest.ServerUrl);
-        PropertyLabel("Protocol Version", MDMulti.Rest.ProtocolVersion.ToString());
+            GUILayout.Space(10);
 
-        GUILayout.Space(10);
+            PropertyLabel("Rest Base URL", MDMulti.Rest.ServerUrl);
+            PropertyLabel("Protocol Version", MDMulti.Rest.ProtocolVersion.ToString());
 
-        PropertyLabel("Multicasting?", MDMulti.EditorExternalFactors.MulticastActive.ToString());
-        PropertyLabel("Broadcasting?", MDMulti.EditorExternalFactors.BroadcastActive.ToString());
-    }
+            GUILayout.Space(10);
 
-    void Update()
-    {
-        Repaint();
+            PropertyLabel("Multicasting?", MDMulti.EditorExternalFactors.MulticastActive.ToString());
+            PropertyLabel("Broadcasting?", MDMulti.EditorExternalFactors.BroadcastActive.ToString());
+        }
+
+        void Update()
+        {
+            Repaint();
+        }
     }
 }

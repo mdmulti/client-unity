@@ -1,44 +1,46 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using MDMulti;
-using MDMulti.Editor;
 
-public class ConnectionTest : Core
+namespace MDMulti.Editor
 {
-    private static readonly string helpMessage = "MDMulti Services must be running to perform a connection test!";
-
-    [MenuItem("MDMulti/Connection Test")]
-    static void Init()
+    public class ConnectionTest : Core
     {
-        // Get existing open window or if none, make a new one:
-        ConnectionTest window = (ConnectionTest)GetWindow(typeof(ConnectionTest));
-        window.Show();
-    }
+        private static readonly string helpMessage = "MDMulti Services must be running to perform a connection test!";
 
-    void OnGUI()
-    {
-        GUILayout.Label("Connection Test", EditorStyles.boldLabel);
-
-        PropertyLabel("URL", Rest.ServerUrl);
-        
-        if (GUILayout.Button("Test"))
+        [MenuItem("MDMulti/Connection Test")]
+        static void Init()
         {
-            try
-            {
-                MDMulti.Mono.Main.Inst.StartCoroutine(Rest.Get("info", res =>
-                {
-                    EditorUtility.DisplayDialog("MDMulti Connection Test", "Connection test " + ((res.ResponseCode() == 200) ? "passed!" : "failed."), "OK", "");
-                }));
-            } catch (System.Exception)
-            {
-                EditorUtility.DisplayDialog("MDMulti Connection Test", helpMessage, "OK");
-            }
+            // Get existing open window or if none, make a new one:
+            ConnectionTest window = (ConnectionTest)GetWindow(typeof(ConnectionTest), false, "Connection Test");
+            window.Show();
         }
-        EditorGUILayout.HelpBox(helpMessage, MessageType.Warning);
-    }
 
-    void Update()
-    {
-        Repaint();
+        void OnGUI()
+        {
+            GUILayout.Label("Connection Test (Mono)", EditorStyles.boldLabel);
+
+            PropertyLabel("URL", Rest.ServerUrl);
+
+            if (GUILayout.Button("Test"))
+            {
+                try
+                {
+                    MDMulti.Mono.Main.Inst.StartCoroutine(Rest.Get("info", res =>
+                    {
+                        EditorUtility.DisplayDialog("MDMulti Connection Test", "Connection test " + ((res.ResponseCode() == 200) ? "passed!" : "failed."), "OK", "");
+                    }));
+                }
+                catch (System.Exception)
+                {
+                    EditorUtility.DisplayDialog("MDMulti Connection Test", helpMessage, "OK");
+                }
+            }
+            EditorGUILayout.HelpBox(helpMessage, MessageType.Warning);
+        }
+
+        void Update()
+        {
+            Repaint();
+        }
     }
 }
