@@ -12,7 +12,7 @@ namespace MDMulti.LAN.Discovery
     {
         public string server;
         public int protocolVersion;
-        public string applicationName;
+        public string escapedApplicationName;
         // There is no point temp storing the IP here as an IPAddress as it will be sent as a string anyway.
         public string ip;
         public int port;
@@ -24,19 +24,19 @@ namespace MDMulti.LAN.Discovery
         {
             server = "MDMulti";
             protocolVersion = Rest.ProtocolVersion;
-            applicationName = Mono.Options.Instance.appName;
+            escapedApplicationName = EscapeHelper.Escape(Mono.Options.Instance.appName);
             ip = ConnectionTests.GetLANIP().ToString();
             port = 69;
         }
 
         public byte[] Buffer()
         {
-           return Encoding.UTF8.GetBytes(server + "/" + protocolVersion + "/" + applicationName + "/" + ip + "/" + port);
+           return Encoding.UTF8.GetBytes(server + "/" + protocolVersion + "/" + escapedApplicationName + "/" + ip + "/" + port);
         }
 
         public string Header()
         {
-            return server;// + "/" + protocolVersion + "/";
+            return server + "/" + protocolVersion + "/" + escapedApplicationName;
         }
     }
 }
