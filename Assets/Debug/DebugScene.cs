@@ -51,6 +51,9 @@ public class DebugScene : MonoBehaviour
     public async void Latest()
     {
         Debug.Log("A");
+        //Debug.Log(await CertHelper.VerifyUserCert(await CertHelper.GetCertificateFromFile(CertHelper.GetFirstUserCertFileName())));
+        await CertHelper.GetCertificateFromFile("meme");
+        
     }
 
     public void GetServerCert()
