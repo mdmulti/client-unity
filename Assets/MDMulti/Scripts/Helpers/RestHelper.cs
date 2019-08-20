@@ -11,6 +11,11 @@ namespace MDMulti
 
             Rest.RequestResponse res = await Rest.GetAsync("server-public");
 
+            if (res.ResponseCode() != 200)
+            {
+                throw new Rest.ServerNotAvailableException("The server returned HTTP Code " + res.ResponseCode());
+            }
+
             Debug.Log("CERT: " + res.ContentType());
             Debug.Log("Cert: " + res.ResponseData());
 

@@ -136,5 +136,23 @@ namespace MDMulti
                 return request.GetResponseHeaders();
             }
         }
+
+        public class ServerNotAvailableException : Exception
+        {
+            public ServerNotAvailableException()
+            {
+
+            }
+
+            public ServerNotAvailableException(string message)
+                : base(message)
+            {
+            }
+
+            public ServerNotAvailableException(string message, Exception inner)
+                : base(message, inner)
+            {
+            }
+        }
     }
 }
