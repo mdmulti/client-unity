@@ -48,6 +48,16 @@ public class DebugScene : MonoBehaviour
         Broadcast.StopBroadcasting();
     }
 
+    public void BroadcastRXStart()
+    {
+        Broadcast.StartListening();
+    }
+
+    public void BroadcastRXStop()
+    {
+        Broadcast.StopListening();
+    }
+
     public async void Latest()
     {
         Debug.Log("A");

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,12 +9,18 @@ namespace MDMulti.LAN.Discovery.Providers
 {
     public class Broadcast
     {
-        private static bool isBroadcasting = false;
-
-        private static CancellationTokenSource BroadcastCts = new CancellationTokenSource();
+        #region Dual
 
         private static IPEndPoint BroadcastEndpoint = new IPEndPoint(IPAddress.Parse("255.255.255.255"), 25816);
 
+        #endregion
+
+        #region Broadcast
+
+        private static bool isBroadcasting = false;
+
+        private static CancellationTokenSource BroadcastCts = new CancellationTokenSource();
+        
         private static async Task BeginBroadcastingAsync(CancellationToken token)
         {
             byte[] buffer = new Message().Buffer();
@@ -54,5 +61,74 @@ namespace MDMulti.LAN.Discovery.Providers
             isBroadcasting = false;
             EditorExternalFactors.BroadcastActive = isBroadcasting;
         }
+
+        #endregion
+
+        #region Receive
+
+        private static bool isListening = false;
+
+        private static CancellationTokenSource ListenCts = new CancellationTokenSource();
+
+        private static async Task BeginListeningAsync(CancellationToken token)
+        {
+            var client = new UdpClient(BroadcastEndpoint.Port);
+            token.Register(() => client.Close());
+
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                while (true)
+                {
+                    var result = await client.ReceiveAsync();
+                    var data = Encoding.UTF8.GetString(result.Buffer);
+                    if (data.StartsWith(new Message().Header(), StringComparison.Ordinal))
+                    {
+                        UnityEngine.Debug.Log("BF: " + data);
+                        //ServerFoundEvent.serverFoundDel sfd = new ServerFoundEvent.serverFoundDel(TEST);
+                        //ServerFoundEvent.OnServerFound += sfd;
+                        string[] split = data.Split('/');
+                        ServerFoundEvent.RegisterFoundServer(new ServerDetails()
+                        {
+                            IP = split[3].ToString(),
+                            Port = int.Parse(split[4].ToString()),
+                            DiscoveryMethod = DiscoveryMethod.Broadcast
+                        });
+                        //ServerFoundEvent.OnServerFound -= sfd;
+
+                    }
+                }
+            }
+            catch (ObjectDisposedException)
+            {
+                // This will happen when we cancel the task.  We can ignore this.
+            }
+            catch (SocketException)
+            {
+                token.ThrowIfCancellationRequested();
+                // Ignore this
+            }
+            catch (Exception ex)
+            {
+                token.ThrowIfCancellationRequested();
+                UnityEngine.Debug.Log("Ignoring bad UDP " + ex);
+            }
+        }
+
+        public static async void StartListening()
+        {
+            if (isListening) return;
+            isListening = true;
+            await BeginListeningAsync(ListenCts.Token);
+
+        }
+
+        public static void StopListening()
+        {
+            ListenCts.Cancel();
+            isListening = false;
+        }
+
+        #endregion
     }
 }

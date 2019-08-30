@@ -43,9 +43,7 @@ namespace MDMulti.LAN.Discovery
 
         public bool Equals(ServerDetails other)
         {
-            return other != null
-                && other.IP == IP
-                        && other.Port == Port;
+            return other != null && other.IP == IP && other.Port == Port && other.DiscoveryMethod == DiscoveryMethod;
         }
 
         public override int GetHashCode()
