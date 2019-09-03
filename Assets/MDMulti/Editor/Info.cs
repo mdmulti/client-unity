@@ -17,9 +17,14 @@ namespace MDMulti.Editor
         void OnGUI()
         {
             GUILayout.Label("MDMulti Information", EditorStyles.boldLabel);
-
-            PropertyLabel("Services Loaded", MainMonoLoaded().ToString());
-
+            
+            if (Application.isPlaying)
+            {
+                PropertyLabel("Services Loaded", MainMonoLoaded().ToString());
+            } else
+            {
+                PropertyLabel("Services Loaded", "False (Game not running!)");
+            }
             GUILayout.Space(10);
 
             PropertyLabel("Rest Base URL", MDMulti.Rest.ServerUrl);

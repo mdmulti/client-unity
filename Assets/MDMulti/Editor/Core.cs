@@ -28,7 +28,7 @@ namespace MDMulti.Editor
 
         public static bool MainMonoLoaded()
         {
-            return Mono.Main.Inst == null;
+            return Mono.Main.Inst != null;
         }
     }
 }
