@@ -1,17 +1,16 @@
 ﻿using MDMulti.LAN.Discovery;
 using System.Collections.Generic;
 
-namespace MDMulti
-{
-    public class EditorExternalFactors
-    {
-        public static bool MulticastActive = false;
-        public static bool BroadcastActive = false;
-    }
-}
-
 namespace MDMulti.Editor.Factors
 {
+    public class ActiveItems
+    {
+        public static bool MulticastSend = false;
+        public static bool MulticastRecv = false;
+        public static bool BroadcastSend = false;
+        public static bool BroadcastRecv = false;
+    }
+
     public class LANServers
     {
         public static List<ServerDetails> servers = new List<ServerDetails>();

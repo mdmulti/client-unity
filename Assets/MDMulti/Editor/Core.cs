@@ -26,6 +26,11 @@ namespace MDMulti.Editor
             EditorGUILayout.EndHorizontal();
         }
 
+        public static void PropertyLabel(string name, bool value)
+        {
+            PropertyLabel(name, value.ToString());
+        }
+
         public static bool MainMonoLoaded()
         {
             return Mono.Main.Inst != null;

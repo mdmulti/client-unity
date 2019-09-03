@@ -5,6 +5,8 @@ namespace MDMulti.Editor
 {
     public class MDMultiInfo : Core
     {
+        bool fp1 = true;
+        bool fp2 = true;
 
         [MenuItem("MDMulti/Info")]
         static void Init()
@@ -32,13 +34,30 @@ namespace MDMulti.Editor
 
             GUILayout.Space(10);
 
-            PropertyLabel("Multicasting?", MDMulti.EditorExternalFactors.MulticastActive.ToString());
-            PropertyLabel("Broadcasting?", MDMulti.EditorExternalFactors.BroadcastActive.ToString());
+            fp1 = EditorGUILayout.Foldout(fp1, "Multicast");
+            if (fp1)
+            {
+                PropertyLabel("     Sending?", Factors.ActiveItems.MulticastSend);
+                PropertyLabel("     Receiving?", Factors.ActiveItems.MulticastRecv);
+            }
+
+            fp2 = EditorGUILayout.Foldout(fp2, "Broadcast");
+            if (fp2)
+            {
+                PropertyLabel("     Sending?", Factors.ActiveItems.BroadcastSend);
+                PropertyLabel("     Receiving?", Factors.ActiveItems.BroadcastRecv);
+            }
+
         }
 
         void Update()
         {
             Repaint();
+        }
+
+        public void OnInspectorUpdate()
+        {
+            Update();
         }
     }
 }

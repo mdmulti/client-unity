@@ -50,7 +50,7 @@ namespace MDMulti.LAN.Discovery.Providers
         {
             if (isBroadcasting) return;
             isBroadcasting = true;
-            EditorExternalFactors.BroadcastActive = isBroadcasting;
+            Editor.Factors.ActiveItems.BroadcastSend = isBroadcasting;
             await BeginBroadcastingAsync(BroadcastCts.Token);
 
         }
@@ -59,7 +59,7 @@ namespace MDMulti.LAN.Discovery.Providers
         {
             BroadcastCts.Cancel();
             isBroadcasting = false;
-            EditorExternalFactors.BroadcastActive = isBroadcasting;
+            Editor.Factors.ActiveItems.BroadcastSend = isBroadcasting;
         }
 
         #endregion
@@ -119,6 +119,7 @@ namespace MDMulti.LAN.Discovery.Providers
         {
             if (isListening) return;
             isListening = true;
+            Editor.Factors.ActiveItems.BroadcastRecv = isBroadcasting;
             await BeginListeningAsync(ListenCts.Token);
 
         }
@@ -127,6 +128,7 @@ namespace MDMulti.LAN.Discovery.Providers
         {
             ListenCts.Cancel();
             isListening = false;
+            Editor.Factors.ActiveItems.BroadcastRecv = isBroadcasting;
         }
 
         #endregion
