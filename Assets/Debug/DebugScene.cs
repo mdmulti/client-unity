@@ -62,8 +62,19 @@ public class DebugScene : MonoBehaviour
     {
         Debug.Log("A");
         //Debug.Log(await CertHelper.VerifyUserCert(await CertHelper.GetCertificateFromFile(CertHelper.GetFirstUserCertFileName())));
-        await CertHelper.GetCertificateFromFile("meme");
-        
+        //await CertHelper.GetCertificateFromFile("meme");
+        System.Security.Cryptography.X509Certificates.X509Certificate2 user = await CertHelper.GetCertificateFromFile("y3.crt");
+        //Debug.Log(CertHelper.GetIssuer(await CertHelper.GetCertificateFromFile(CertHelper.GetFirstUserCertFileName())).GetSerialNumberString());
+
+        //System.Security.Cryptography.X509Certificates.X509Certificate2 root = CertHelper.GetIssuer(user);
+
+        //Debug.Log(root.FriendlyName);
+        //Debug.Log(user.Issuer);
+
+        UserFile u = new UserFile(user);
+        Debug.Log(u.DisplayName);
+        Debug.Log(u.ID);
+        Debug.Log(u.ServerID);
     }
 
     public void GetServerCert()
