@@ -183,5 +183,11 @@ namespace MDMulti
 
             return arr;
         }
+
+        public static string ExportCertificate(X509Certificate2 cert)
+        {
+            byte[] encodedCert = cert.Export(X509ContentType.Cert);
+            return Convert.ToBase64String(encodedCert, Base64FormattingOptions.None);
+        }
     }
 }

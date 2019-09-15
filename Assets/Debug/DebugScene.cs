@@ -75,6 +75,8 @@ public class DebugScene : MonoBehaviour
         Debug.Log(u.DisplayName);
         Debug.Log(u.ID);
         Debug.Log(u.ServerID);
+
+        u.Save();
     }
 
     public void GetServerCert()

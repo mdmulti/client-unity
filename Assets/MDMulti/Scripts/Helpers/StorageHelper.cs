@@ -30,6 +30,12 @@ namespace MDMulti
             file.Close();
         }
 
+        public static void SaveToFileAlternate(string data, string filename)
+        {
+            Debug.Log(Application.persistentDataPath);
+            File.WriteAllText(GetFullPath(filename), data);
+        }
+
         public static bool FileExists(string filename)
         {
             return File.Exists(Application.persistentDataPath + "/" + filename);

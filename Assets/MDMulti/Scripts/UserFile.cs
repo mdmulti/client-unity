@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Security.Cryptography.X509Certificates;
 
 namespace MDMulti
@@ -34,6 +35,18 @@ namespace MDMulti
             }
         }
 
+        public void Save()
+        {
+            JSONSchema json = new JSONSchema();
+            json.id = ID;
+            json.serverId = ServerID;
+            json.displayName = DisplayName;
+            json.pubkey = CertHelper.ExportCertificate(Cert);
+            //UnityEngine.Debug.Log(json.pubkey);
+            //UnityEngine.Debug.Log(JsonConvert.SerializeObject(json));
+            StorageHelper.SaveToFileAlternate(JsonConvert.SerializeObject(json), ID + ".mdmc");
+        }
+
         public class InvalidCertificateException : Exception
         {
             public InvalidCertificateException()
@@ -49,6 +62,21 @@ namespace MDMulti
             public InvalidCertificateException(string message, Exception inner)
                 : base(message, inner)
             {
+            }
+        }
+
+        public class JSONSchema
+        {
+            public readonly int version = 1;
+
+            public string id;
+            public string serverId;
+            public string displayName;
+            public string pubkey;
+
+            public JSONSchema()
+            {
+
             }
         }
     }
