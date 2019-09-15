@@ -6,6 +6,9 @@
 //
 // Copyright (C) 2004-2005 Novell Inc. (http://www.novell.com)
 //
+// NOTE: Other files from this series were removed in e1f122f033b0524853bf0d14d3335f24497448f4.
+// You can recover them from before that commit or in the branch 'archive_full_ans1'.
+//
 
 using System;
 using System.Collections;
