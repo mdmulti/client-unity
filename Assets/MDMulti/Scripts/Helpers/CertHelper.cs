@@ -162,7 +162,7 @@ namespace MDMulti
         /// <returns></returns>
         public static string GetCustomOIDValue(X509Extension extension)
         {
-            ASN1.ASN1Element element = new ASN1.ASN1Element(extension.RawData, 0);
+            ASN1Element element = new ASN1Element(extension.RawData, 0);
             return ConvertHex(BitConverter.ToString(element.Value).Replace("-", "").Replace("00", ""));
         }
 

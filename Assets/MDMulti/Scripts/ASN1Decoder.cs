@@ -14,7 +14,7 @@ using System.Text;
 // NOTE: This class is a prototype. A future version of it will be included into
 // Mono.Security.dll in Mono 2.0. Use at your own risk (as the API _will_ change).
 
-namespace MDMulti.ASN1 {
+namespace MDMulti {
 
 	public class ASN1Element {
 
