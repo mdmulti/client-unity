@@ -61,22 +61,8 @@ public class DebugScene : MonoBehaviour
     public async void Latest()
     {
         Debug.Log("A");
-        //Debug.Log(await CertHelper.VerifyUserCert(await CertHelper.GetCertificateFromFile(CertHelper.GetFirstUserCertFileName())));
-        //await CertHelper.GetCertificateFromFile("meme");
-        System.Security.Cryptography.X509Certificates.X509Certificate2 user = await CertHelper.GetCertificateFromFile("y3.crt");
-        //Debug.Log(CertHelper.GetIssuer(await CertHelper.GetCertificateFromFile(CertHelper.GetFirstUserCertFileName())).GetSerialNumberString());
-
-        //System.Security.Cryptography.X509Certificates.X509Certificate2 root = CertHelper.GetIssuer(user);
-
-        //Debug.Log(root.FriendlyName);
-        //Debug.Log(user.Issuer);
-
-        UserFile u = new UserFile(user);
-        Debug.Log(u.DisplayName);
-        Debug.Log(u.ID);
-        Debug.Log(u.ServerID);
-
-        u.Save();
+        System.Net.IPEndPoint ipe = new System.Net.IPEndPoint(IPHelper.ToAddressObject(IPHelper.ToBytes("127.0.0.1")), 27421);
+        NetSend.Send(ipe, NetSend.DataTypes.UnreliableUDP, "TEST");
     }
 
     public void GetServerCert()
