@@ -28,14 +28,30 @@ namespace MDMulti
                     SendUDP(ipep, bdata);
                     break;
                 default:
-                    throw new System.Exception();
+                    throw new System.NotImplementedException();
             }
         }
 
-        private static void SendUDP(IPEndPoint ipep, byte[] bdata)
+        private static void SendUDP(IPEndPoint ipep, byte[] data)
         {
             UdpClient client = new UdpClient();
+            byte[] bdata = AddInfoData(data);
             client.Send(bdata, bdata.Length, ipep);
+        }
+
+        private static byte[] AddInfoData(byte[] data)
+        {
+            LAN.Discovery.Message m = new LAN.Discovery.Message();
+            string h = m.server + "/" + m.escapedApplicationName + "/////";
+
+            byte[] headerb = Encoding.UTF8.GetBytes(h);
+
+            byte[] res = new byte[data.Length + headerb.Length];
+            System.Buffer.BlockCopy(headerb, 0, res, 0, headerb.Length);
+            System.Buffer.BlockCopy(data, 0, res, headerb.Length, data.Length);
+
+            return res;
+
         }
 
         public enum DataTypes
