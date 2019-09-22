@@ -5,10 +5,16 @@ namespace MDMulti.Net
 {
     public class GeneralCore
     {
-        public static byte[] AddInfoData(byte[] data)
+        public static string GetInfoData()
         {
             LAN.Discovery.Message m = new LAN.Discovery.Message();
-            string h = m.server + "/" + m.escapedApplicationName + "/////";
+            string header = m.server + "/" + m.escapedApplicationName + "/////";
+            return header;
+        }
+
+        public static byte[] AddInfoData(byte[] data)
+        {
+            string h = GetInfoData();
 
             byte[] headerb = Encoding.UTF8.GetBytes(h);
 

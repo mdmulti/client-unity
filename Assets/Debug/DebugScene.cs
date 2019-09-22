@@ -60,11 +60,20 @@ public class DebugScene : MonoBehaviour
 
     public async void Latest()
     {
-        Debug.Log("A");
+        Debug.Log("L");
         System.Net.IPEndPoint ipe = new System.Net.IPEndPoint(IPHelper.ToAddressObject(IPHelper.ToBytes("127.0.0.1")), 27423);
         //NetSend.Send(ipe, NetSend.DataTypes.UnreliableUDP, "TEST");
-        MDMulti.Net.GeneralSend gs = new MDMulti.Net.GeneralSend(ipe, MDMulti.Net.DataTypes.ReliableTCP);
+        MDMulti.Net.GeneralSend gs = new MDMulti.Net.GeneralSend(ipe, MDMulti.Net.DataTypes.UnreliableUDP);
         gs.Send("Hello, World! GS");
+    }
+
+    public async void Latest2()
+    {
+        Debug.Log("L2");
+        System.Net.IPEndPoint ipe = new System.Net.IPEndPoint(IPHelper.ToAddressObject(IPHelper.ToBytes("127.0.0.1")), 27423);
+        //NetSend.Send(ipe, NetSend.DataTypes.UnreliableUDP, "TEST");
+        MDMulti.Net.GeneralRecieve gs = new MDMulti.Net.GeneralRecieve(ipe, MDMulti.Net.DataTypes.UnreliableUDP);
+        gs.StartListening();
     }
 
     public void GetServerCert()
