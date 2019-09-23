@@ -25,7 +25,7 @@ namespace MDMulti
             {
                 Cert = cert;
                 ID = cert.GetSerialNumberString();
-                ServerID = CertHelper.GetCustomOIDValue(cert.Extensions["1.3.6.1.4.1.37476.9000.83.1.3"]);
+                ServerID = CertHelper.GetCustomOIDValue(cert.Extensions[CertHelper.oid_base + ".3"]);
 
                 // As only specifying a certificate does not give us a display name, we will just set it to unknown.
                 DisplayName = "Unknown";

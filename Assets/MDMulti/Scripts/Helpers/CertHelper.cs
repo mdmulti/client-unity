@@ -9,9 +9,9 @@ namespace MDMulti
 {
     public class CertHelper
     {
-        private static readonly string oid = "1.3.6.1.4.1.37476.9000.83.1";
-        private static readonly string oid_client_proto_version = "1.3.6.1.4.1.37476.9000.83.1.1";
-        private static readonly string oid_type = "1.3.6.1.4.1.37476.9000.83.1.2";
+        public static readonly string oid_base = "1.3.6.1.4.1.54622.0.1";
+        private static readonly string oid_client_proto_version = oid_base + ".1";
+        private static readonly string oid_type = oid_base + ".2";
 
         /// <summary>
         /// Takes in a user certificate and verifies that it was signed by the active server certificate.
@@ -119,11 +119,11 @@ namespace MDMulti
         {
             UnityEngine.Debug.Log("LEN: " + cert.Extensions.Count);
             UnityEngine.Debug.Log("COIDV: " + GetCustomOIDValue(cert.Extensions[5]));
-            UnityEngine.Debug.Log("COIDV VIA TXT: " + GetCustomOIDValue(cert.Extensions[oid_client_proto_version]));
+            //UnityEngine.Debug.Log("COIDV VIA TXT: " + GetCustomOIDValue(cert.Extensions[oid_client_proto_version]));
             UnityEngine.Debug.Log("ALLOID: " + string.Join(", ", GetAllCustomOIDValues(cert.Extensions)));
             
 
-            return (cert.Extensions[oid] != null && GetCustomOIDValue(cert.Extensions[oid_type]) == "1");
+            return (cert.Extensions[oid_base] != null && GetCustomOIDValue(cert.Extensions[oid_type]) == "1" && GetCustomOIDValue(cert.Extensions[oid_client_proto_version]) == "4");
         }
 
         /// <summary>
