@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 
 namespace MDMulti.LAN.Discovery
 {
@@ -50,6 +51,11 @@ namespace MDMulti.LAN.Discovery
         public override int GetHashCode()
         {
             return IP.GetHashCode();
+        }
+
+        public IPEndPoint GetIPEndPoint()
+        {
+            return new IPEndPoint(IPHelper.ToAddressObject(IPHelper.ToBytes(IP)), Port);
         }
     }
 }

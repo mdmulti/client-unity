@@ -2,6 +2,7 @@
 using MDMulti;
 using MDMulti.LAN.Discovery.Providers;
 using System.Threading;
+using MDMulti.LAN.Discovery;
 
 public class DebugScene : MonoBehaviour
 {
@@ -38,9 +39,9 @@ public class DebugScene : MonoBehaviour
         Multicast.StopListening();
     }
 
-    public void BroadcastStart()
+    public async void BroadcastStart()
     {
-        Broadcast.StartBroadcasting();
+        Broadcast.StartBroadcasting(new UserFile(await CertHelper.GetCertificateFromFile("p4.crt")));
     }
 
     public void BroadcastStop()
@@ -58,22 +59,35 @@ public class DebugScene : MonoBehaviour
         Broadcast.StopListening();
     }
 
+    private ServerFoundEvent.serverFoundDel sfd;
+
     public async void Latest()
     {
-        Debug.Log("L");
-        System.Net.IPEndPoint ipe = new System.Net.IPEndPoint(IPHelper.ToAddressObject(IPHelper.ToBytes("127.0.0.1")), 27423);
+        Debug.LogError("L");
+        sfd = new ServerFoundEvent.serverFoundDel(l_int);
+        ServerFoundEvent.OnServerFound += sfd;
+        //System.Net.IPEndPoint ipe = new System.Net.IPEndPoint(IPHelper.ToAddressObject(IPHelper.ToBytes("127.0.0.1")), 27423);
         //NetSend.Send(ipe, NetSend.DataTypes.UnreliableUDP, "TEST");
-        MDMulti.Net.GeneralSend gs = new MDMulti.Net.GeneralSend(ipe, MDMulti.Net.DataTypes.UnreliableUDP);
-        gs.Send("Hello, World! GS");
+        //MDMulti.Net.PlainClient gs = new MDMulti.Net.PlainClient(ipe);
+        //gs.Send("Hello, World! GS");
+    }
+
+    private async void l_int(ServerDetails sfe)
+    {
+        Debug.LogError("L_INT");
+        UnityEngine.Debug.LogError(await new PeerConnectionClient(sfe).IsValidPeer());
+        Debug.LogError("L_INT_REM_INPROG");
+        ServerFoundEvent.OnServerFound -= sfd;
+        Debug.LogError("L_INT_REM_DONE");
     }
 
     public async void Latest2()
     {
         Debug.Log("L2");
-        System.Net.IPEndPoint ipe = new System.Net.IPEndPoint(IPHelper.ToAddressObject(IPHelper.ToBytes("127.0.0.1")), 27423);
+        //System.Net.IPEndPoint ipe = new System.Net.IPEndPoint(IPHelper.ToAddressObject(IPHelper.ToBytes("127.0.0.1")), 27423);
         //NetSend.Send(ipe, NetSend.DataTypes.UnreliableUDP, "TEST");
-        MDMulti.Net.GeneralRecieve gs = new MDMulti.Net.GeneralRecieve(ipe, MDMulti.Net.DataTypes.UnreliableUDP);
-        gs.StartListening();
+        //MDMulti.Net.GeneralRecieve gs = new MDMulti.Net.GeneralRecieve(ipe, MDMulti.Net.DataTypes.UnreliableUDP);
+        //gs.StartListening();
     }
 
     public void GetServerCert()

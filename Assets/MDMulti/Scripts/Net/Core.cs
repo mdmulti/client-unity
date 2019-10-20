@@ -3,12 +3,12 @@ using System.Text;
 
 namespace MDMulti.Net
 {
-    public class GeneralCore
+    public class Core
     {
         public static string GetInfoData()
         {
             LAN.Discovery.Message m = new LAN.Discovery.Message();
-            string header = m.server + "/" + m.escapedApplicationName + "/////";
+            string header = "MDMPEER/" + m.escapedApplicationName + "/";
             return header;
         }
 
@@ -24,6 +24,17 @@ namespace MDMulti.Net
 
             return res;
 
+        }
+
+        public static string ParseResponse(string data)
+        {
+            if (data.StartsWith(GetInfoData(), StringComparison.Ordinal))
+            {
+                return data.Split('/')[2];
+            } else
+            {
+                return "MDMPEER_ERR_INVALID_RESPONSE";
+            }
         }
     }
 
