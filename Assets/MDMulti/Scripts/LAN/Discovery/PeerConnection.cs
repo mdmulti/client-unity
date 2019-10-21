@@ -26,10 +26,10 @@ namespace MDMulti.LAN.Discovery
             this.ps = new PlainClient(sd.GetIPEndPoint());
         }
 
-        public async Task<bool> IsValidPeer()
+        public bool IsValidPeer()
         {
             //return (await ps.Send("MDMPEER_ACK")) == ProtocolVersionString;
-            string res = await ps.Send("MDMPEER_ACK");
+            string res =  ps.Send("MDMPEER_ACK");
 
             UnityEngine.Debug.LogError("PEERCONN_C_RES = " + res);
 

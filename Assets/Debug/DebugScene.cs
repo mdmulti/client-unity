@@ -64,18 +64,18 @@ public class DebugScene : MonoBehaviour
     public async void Latest()
     {
         Debug.LogError("L");
-        //sfd = new ServerFoundEvent.serverFoundDel(l_int);
-        //ServerFoundEvent.OnServerFound += sfd;
+        sfd = new ServerFoundEvent.serverFoundDel(l_int);
+        ServerFoundEvent.OnServerFound += sfd;
 
-        UserFile us = new UserFile("792F1D97A2740D45867B");
-        Debug.Log(us.ID);
-        us.Save();
+        //UserFile us = new UserFile("792F1D97A2740D45867B");
+        //Debug.Log(us.ID);
+        //us.Save();
     }
 
     private async void l_int(ServerDetails sfe)
     {
         Debug.LogError("L_INT");
-        UnityEngine.Debug.LogError(await new PeerConnectionClient(sfe).IsValidPeer());
+        UnityEngine.Debug.LogError(new PeerConnectionClient(sfe).IsValidPeer());
         Debug.LogError("L_INT_REM_INPROG");
         ServerFoundEvent.OnServerFound -= sfd;
         Debug.LogError("L_INT_REM_DONE");

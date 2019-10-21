@@ -24,7 +24,7 @@ namespace MDMulti.Net
 
         }
 
-        public async Task<string> Send(string sdata)
+        public string Send(string sdata)
         {
             // Convert the data to UTF8 and escape it
             byte[] data = AddInfoData(Encoding.UTF8.GetBytes(EscapeHelper.Escape(sdata)));
