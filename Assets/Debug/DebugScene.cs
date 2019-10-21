@@ -64,12 +64,12 @@ public class DebugScene : MonoBehaviour
     public async void Latest()
     {
         Debug.LogError("L");
-        sfd = new ServerFoundEvent.serverFoundDel(l_int);
-        ServerFoundEvent.OnServerFound += sfd;
-        //System.Net.IPEndPoint ipe = new System.Net.IPEndPoint(IPHelper.ToAddressObject(IPHelper.ToBytes("127.0.0.1")), 27423);
-        //NetSend.Send(ipe, NetSend.DataTypes.UnreliableUDP, "TEST");
-        //MDMulti.Net.PlainClient gs = new MDMulti.Net.PlainClient(ipe);
-        //gs.Send("Hello, World! GS");
+        //sfd = new ServerFoundEvent.serverFoundDel(l_int);
+        //ServerFoundEvent.OnServerFound += sfd;
+
+        UserFile us = new UserFile("792F1D97A2740D45867B");
+        Debug.Log(us.ID);
+        us.Save();
     }
 
     private async void l_int(ServerDetails sfe)

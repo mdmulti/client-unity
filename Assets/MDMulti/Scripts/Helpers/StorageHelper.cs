@@ -48,5 +48,13 @@ namespace MDMulti
             await file.ReadAsync(buffer, 0, (int)file.Length);
             return buffer;
         }
+
+        public static byte[] ReadFileByteSync(string filename)
+        {
+            FileStream file = File.OpenRead(GetFullPath(filename));
+            byte[] buffer = new byte[file.Length];
+            file.Read(buffer, 0, (int)file.Length);
+            return buffer;
+        }
     }
 }

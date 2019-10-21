@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace MDMulti
 {
@@ -18,8 +20,39 @@ namespace MDMulti
         {
 
         }
+        /// <summary>
+        /// UserFile constructor - loads from a .mdmc file.
+        /// </summary>
+        /// <param name="clientID">the client ID or filename to load (exluding ext)</param>
+        public UserFile(string clientID)
+        {
+            string filename = clientID + ".mdmc";
+            
+            if (StorageHelper.FileExists(filename))
+            {
+                // Load the file
+                byte[] raw = StorageHelper.ReadFileByteSync(filename);
+
+                // Convert it from JSON into an object
+                JSONSchema data = JsonConvert.DeserializeObject<JSONSchema>(Encoding.UTF8.GetString(raw));
+
+                // Decode the Keypairs
+                byte[] keypairsB = Convert.FromBase64String(data.keypairs);
+
+                // Create the certificate
+                X509Certificate2 cert = new X509Certificate2(keypairsB, "", X509KeyStorageFlags.PersistKeySet);
+                
+                // Run the usual init for certificates.
+                Setup(cert);
+            }
+        }
 
         public UserFile(X509Certificate2 cert)
+        {
+            Setup(cert);
+        }
+
+        private void Setup(X509Certificate2 cert)
         {
             if (CertHelper.IsUserCertificate(cert))
             {
@@ -29,7 +62,8 @@ namespace MDMulti
 
                 // As only specifying a certificate does not give us a display name, we will just set it to unknown.
                 DisplayName = "Unknown";
-            } else
+            }
+            else
             {
                 throw new InvalidCertificateException("The User Certificate check failed.");
             }
