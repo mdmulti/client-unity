@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,11 @@ namespace MDMulti
 {
     public class UserFile
     {
+        /// <summary>
+        /// The algorithm used to encrypt and decrypt data.
+        /// </summary>
+        private readonly static RSAEncryptionPadding RSAEncryptionType = RSAEncryptionPadding.OaepSHA256;
+
         public X509Certificate2 Cert { get; private set; }
 
         public string DisplayName { get; private set; }
@@ -86,6 +92,38 @@ namespace MDMulti
             }
 
             StorageHelper.SaveToFileAlternate(JsonConvert.SerializeObject(json), ID + ".mdmc");
+        }
+
+        public byte[] EncryptBytes(byte[] data)
+        {
+            // GetRSAPublicKey returns an object with an independent lifetime, so it should be
+            // handled via a using statement.
+            using (RSA rsa = Cert.GetRSAPublicKey())
+            {
+                // OAEP allows for multiple hashing algorithms, what was formermly just "OAEP" is
+                // now OAEP-SHA1.
+                return rsa.Encrypt(data, RSAEncryptionType);
+            }
+        }
+
+        public byte[] DecryptBytes(byte[] data)
+        {
+            // GetRSAPrivateKey returns an object with an independent lifetime, so it should be
+            // handled via a using statement.
+            using (RSA rsa = Cert.GetRSAPrivateKey())
+            {
+                return rsa.Decrypt(data, RSAEncryptionType);
+            }
+        }
+
+        public string EncryptString(string data)
+        {
+            return Encoding.UTF8.GetString(EncryptBytes(Encoding.UTF8.GetBytes(data)));
+        }
+
+        public string DecryptString(string data)
+        {
+            return Encoding.UTF8.GetString(DecryptBytes(Encoding.UTF8.GetBytes(data)));
         }
 
         public class InvalidCertificateException : Exception
