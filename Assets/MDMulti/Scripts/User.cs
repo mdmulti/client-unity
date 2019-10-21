@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
+﻿using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using UnityEngine.Networking;
 
 using Debug = UnityEngine.Debug;
 
@@ -18,10 +15,10 @@ namespace MDMulti
             Debug.Log("RES PROTO: " + res.ProtocolVersion());
             Debug.Log("RES DATA: " + res.ResponseData());
 
-            // TEMP REMOVE
-            StorageHelper.SaveToFile(res.ResponseData(), "test.crt");
+            string contentType;
+            res.Headers().TryGetValue("Content-Type", out contentType);
 
-            if (res.ResponseCode() == 201)
+            if (res.ResponseCode() == 201 && contentType.Contains("application/x-mdm-keypair"))
             {
                 // Create the certificate and private key c# objects
                 X509Certificate2 c = PEMCertHelper.GetCertificateFromDualPEM(res.ResponseData());
@@ -30,7 +27,9 @@ namespace MDMulti
                 return new UserFile(c);
             } else
             {
-                UnityEngine.Debug.LogError("USER CREATENEW PROFILE RES ERROR");
+                // Maybe throw an Exception here?
+                // Example causes: outdated server / wrong url / server offline
+                Debug.LogError("USER CREATENEW PROFILE RES ERROR");
                 return null;
             }
         }
