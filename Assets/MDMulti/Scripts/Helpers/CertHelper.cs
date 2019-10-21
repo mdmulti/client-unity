@@ -191,13 +191,10 @@ namespace MDMulti
             return Convert.ToBase64String(encodedCert, Base64FormattingOptions.None);
         }
 
-        public static string ExportPrivateKey(X509Certificate2 cert)
+        public static string ExportKeyPairs(X509Certificate2 cert)
         {
             if (!cert.HasPrivateKey) throw new UserFile.InvalidCertificateException("Certificate has no private key.");
-            // This is cheating
-            //cert.Export(X509ContentType.Pkcs12);
-
-            //System.Security.Cryptography.rsaopen
+            return Convert.ToBase64String(cert.Export(X509ContentType.Pkcs12, ""), Base64FormattingOptions.None);
         }
     }
 }

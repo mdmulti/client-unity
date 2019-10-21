@@ -41,20 +41,16 @@ namespace MDMulti
             json.id = ID;
             json.serverId = ServerID;
             json.displayName = DisplayName;
-            json.cert = CertHelper.ExportCertificate(Cert);
 
             try
             {
-                json.priv = CertHelper.ExportPrivateKey(Cert);
+                json.keypairs = CertHelper.ExportKeyPairs(Cert);
             } catch (InvalidCertificateException)
             {
-                UnityEngine.Debug.Log("JSONPRIVNULL");
-                json.priv = null;
+                UnityEngine.Debug.LogWarning("JSON PRIV NULL");
+                json.keypairs = null;
             }
 
-            UnityEngine.Debug.Log("USERFILE SAVE PRIV: " + json.priv);
-            //UnityEngine.Debug.Log(json.pubkey);
-            //UnityEngine.Debug.Log(JsonConvert.SerializeObject(json));
             StorageHelper.SaveToFileAlternate(JsonConvert.SerializeObject(json), ID + ".mdmc");
         }
 
@@ -78,13 +74,12 @@ namespace MDMulti
 
         public class JSONSchema
         {
-            public readonly int version = 2;
+            public readonly int version = 3;
 
             public string id;
             public string serverId;
             public string displayName;
-            public string cert;
-            public string priv;
+            public string keypairs;
 
             public JSONSchema()
             {
