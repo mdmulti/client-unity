@@ -14,8 +14,8 @@ namespace MDMulti.Net
 
         private TcpListener tcp;
 
-        private bool isListening = false;
-        private CancellationTokenSource cts = new CancellationTokenSource();
+        protected bool isListening = false;
+        protected CancellationTokenSource cts = new CancellationTokenSource();
 
         public PlainServer(int port)
         {
@@ -39,7 +39,7 @@ namespace MDMulti.Net
             }
         }
 
-        private async Task ListenTCP(CancellationToken token, Func<string, string> onReceive)
+        protected async Task ListenTCP(CancellationToken token, Func<string, string> onReceive)
         {
             token.Register(() => tcp.Stop());
 

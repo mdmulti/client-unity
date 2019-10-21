@@ -12,7 +12,7 @@ namespace MDMulti
         /// <summary>
         /// The algorithm used to encrypt and decrypt data.
         /// </summary>
-        private readonly static RSAEncryptionPadding RSAEncryptionType = RSAEncryptionPadding.OaepSHA256;
+        private readonly static RSAEncryptionPadding RSAEncryptionType = RSAEncryptionPadding.OaepSHA1;
 
         public X509Certificate2 Cert { get; private set; }
 
