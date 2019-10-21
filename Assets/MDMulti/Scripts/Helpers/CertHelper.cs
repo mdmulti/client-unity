@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
@@ -188,6 +189,15 @@ namespace MDMulti
         {
             byte[] encodedCert = cert.Export(X509ContentType.Cert);
             return Convert.ToBase64String(encodedCert, Base64FormattingOptions.None);
+        }
+
+        public static string ExportPrivateKey(X509Certificate2 cert)
+        {
+            if (!cert.HasPrivateKey) throw new UserFile.InvalidCertificateException("Certificate has no private key.");
+            // This is cheating
+            //cert.Export(X509ContentType.Pkcs12);
+
+            //System.Security.Cryptography.rsaopen
         }
     }
 }

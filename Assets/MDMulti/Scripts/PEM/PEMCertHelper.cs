@@ -1,0 +1,22 @@
+﻿using MDMulti.PEM;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
+
+namespace MDMulti
+{
+    class PEMCertHelper
+    {
+        public static X509Certificate2 GetCertificateFromDualPEM(string data)
+        {
+            byte[] certBuffer = Helpers.GetBytesFromPEM(data, PemStringType.Certificate);
+            byte[] keyBuffer = Helpers.GetBytesFromPEM(data, PemStringType.RsaPrivateKey);
+
+            X509Certificate2 certificate = new X509Certificate2(certBuffer);
+
+            RSACryptoServiceProvider prov = Crypto.DecodeRsaPrivateKey(keyBuffer);
+            certificate.PrivateKey = prov;
+
+            return certificate;
+        }
+    }
+}

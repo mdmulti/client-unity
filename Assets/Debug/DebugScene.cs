@@ -6,9 +6,9 @@ using MDMulti.LAN.Discovery;
 
 public class DebugScene : MonoBehaviour
 {
-    public void CreateUser()
+    public async void CreateUser()
     {
-        User.Create();
+        (await User.CreateNewProfile()).Save();
     }
 
     public void GetTest()
