@@ -27,7 +27,7 @@ namespace MDMulti.Net
         public string Send(string sdata)
         {
             // Convert the data to UTF8 and escape it
-            byte[] data = AddInfoData(Encoding.UTF8.GetBytes(sdata));
+            byte[] data = AddInfoData(Encoding.UTF8.GetBytes(EscapeHelper.B64Escape(sdata)));
 
             // Send the data
             tcp_netstream.Write(data, 0, data.Length);

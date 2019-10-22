@@ -74,7 +74,7 @@ namespace MDMulti.Net
                         string result_raw = onReceive(ParseResponse(data));
 
                         // Add the MDMPEER header
-                        string result = GetInfoData() + result_raw;
+                        string result = GetInfoData() + EscapeHelper.B64Escape(result_raw);
 
                         byte[] msg = Encoding.ASCII.GetBytes(result);
 

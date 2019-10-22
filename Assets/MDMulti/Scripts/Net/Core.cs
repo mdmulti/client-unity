@@ -30,7 +30,7 @@ namespace MDMulti.Net
         {
             if (data.StartsWith(GetInfoData(), StringComparison.Ordinal))
             {
-                return data.Split('/')[2];
+                return EscapeHelper.B64UnEscape(data.Split('/')[2]);
             } else
             {
                 return "MDMPEER_ERR_INVALID_RESPONSE";
