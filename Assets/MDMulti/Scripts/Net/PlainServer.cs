@@ -44,7 +44,7 @@ namespace MDMulti.Net
             token.Register(() => tcp.Stop());
 
             // Buffer to store the response bytes.
-            byte[] bytes = new byte[256];
+            byte[] bytes = new byte[1024];
 
             try
             {
@@ -67,7 +67,7 @@ namespace MDMulti.Net
                     while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
                     {
                         // Translate data bytes to a UTF8 string.
-                        string data = Encoding.UTF8.GetString(bytes, 0, i);
+                        string data = Encoding.ASCII.GetString(bytes, 0, i);
                         UnityEngine.Debug.Log("TCPGR Received: " + data);
 
                         // Process the data sent by the client (call the specified function)
@@ -76,7 +76,7 @@ namespace MDMulti.Net
                         // Add the MDMPEER header
                         string result = GetInfoData() + result_raw;
 
-                        byte[] msg = Encoding.UTF8.GetBytes(result);
+                        byte[] msg = Encoding.ASCII.GetBytes(result);
 
                         // Send back a response.
                         stream.Write(msg, 0, msg.Length);

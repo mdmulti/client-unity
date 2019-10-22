@@ -27,18 +27,18 @@ namespace MDMulti.Net
         public string Send(string sdata)
         {
             // Convert the data to UTF8 and escape it
-            byte[] data = AddInfoData(Encoding.UTF8.GetBytes(EscapeHelper.Escape(sdata)));
+            byte[] data = AddInfoData(Encoding.UTF8.GetBytes(sdata));
 
             // Send the data
             tcp_netstream.Write(data, 0, data.Length);
 
             // Recieve data back from the server
             // Buffer to store the response bytes.
-            byte[] responseDataBytes = new byte[256];
+            byte[] responseDataBytes = new byte[1024];
 
             // Read the first batch of the TcpServer response bytes.
             int bytes = tcp_netstream.Read(responseDataBytes, 0, responseDataBytes.Length);
-            string responseData = Encoding.UTF8.GetString(responseDataBytes, 0, bytes);
+            string responseData = Encoding.ASCII.GetString(responseDataBytes, 0, bytes);
 
             // Parse the response (to make sure it's valid data) and send the actual message
             return ParseResponse(responseData);
