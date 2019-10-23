@@ -8,7 +8,7 @@ namespace MDMulti.Net
         public static string GetInfoData()
         {
             LAN.Discovery.Message m = new LAN.Discovery.Message();
-            string header = "MDMNET/" + m.escapedApplicationName + "/";
+            string header = "MDMNET_" + m.escapedApplicationName + "_";
             return header;
         }
 
@@ -19,8 +19,8 @@ namespace MDMulti.Net
             byte[] headerb = Encoding.UTF8.GetBytes(h);
 
             byte[] res = new byte[data.Length + headerb.Length];
-            System.Buffer.BlockCopy(headerb, 0, res, 0, headerb.Length);
-            System.Buffer.BlockCopy(data, 0, res, headerb.Length, data.Length);
+            Buffer.BlockCopy(headerb, 0, res, 0, headerb.Length);
+            Buffer.BlockCopy(data, 0, res, headerb.Length, data.Length);
 
             return res;
 
@@ -30,7 +30,7 @@ namespace MDMulti.Net
         {
             if (data.StartsWith(GetInfoData(), StringComparison.Ordinal))
             {
-                return StringFromBase64(data.Split('/')[2]);
+                return StringFromBase64(data.Split('_')[2]);
             } else
             {
                 return "MDMNET_ERR_INVALID_RESPONSE";
@@ -39,12 +39,12 @@ namespace MDMulti.Net
 
         public string StringToBase64(string data)
         {
-            return EscapeHelper.B64Escape(Convert.ToBase64String(Encoding.ASCII.GetBytes(data)));
+            return Convert.ToBase64String(Encoding.ASCII.GetBytes(data));
         }
 
         public string StringFromBase64(string data)
         {
-            return Encoding.ASCII.GetString(Convert.FromBase64String(EscapeHelper.B64UnEscape(data)));
+            return Encoding.ASCII.GetString(Convert.FromBase64String(data));
         }
     }
 

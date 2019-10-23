@@ -13,15 +13,5 @@ namespace MDMulti
         {
             return Uri.UnescapeDataString(str);
         }
-
-        public static string B64Escape(string str)
-        {
-            return str.Replace("/", "_");
-        }
-
-        public static string B64UnEscape(string str)
-        {
-            return str.Replace("_", "/");
-        }
     }
 }
