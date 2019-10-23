@@ -8,7 +8,7 @@ namespace MDMulti.Net
         public static string GetInfoData()
         {
             LAN.Discovery.Message m = new LAN.Discovery.Message();
-            string header = "MDMPEER/" + m.escapedApplicationName + "/";
+            string header = "MDMNET/" + m.escapedApplicationName + "/";
             return header;
         }
 
@@ -33,7 +33,7 @@ namespace MDMulti.Net
                 return StringFromBase64(data.Split('/')[2]);
             } else
             {
-                return "MDMPEER_ERR_INVALID_RESPONSE";
+                return "MDMNET_ERR_INVALID_RESPONSE";
             }
         }
 

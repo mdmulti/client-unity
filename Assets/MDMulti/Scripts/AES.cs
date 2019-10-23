@@ -21,8 +21,6 @@ namespace MDMulti
             return new Tuple<byte[], byte[]>(Convert.FromBase64String(arr[0]), Convert.FromBase64String(arr[1]));
         }
 
-        // --------------------
-
         public static string EncToStr(string data)
         {
             return TupleToString(Enc(data));
@@ -45,10 +43,7 @@ namespace MDMulti
                 aesAlg.GenerateIV();
 
                 IV = aesAlg.IV;
-                UnityEngine.Debug.Log("IVLEN: " + IV.Length);
                 key = aesAlg.Key;
-                UnityEngine.Debug.Log("KEY_HEX: " + BitConverter.ToString(key).Replace("-", string.Empty));
-                UnityEngine.Debug.Log("IV_HEX: " + BitConverter.ToString(IV).Replace("-", string.Empty));
 
                 aesAlg.Mode = CipherMode.CBC;
 
@@ -66,7 +61,6 @@ namespace MDMulti
                             swEnc.Flush();
                         }
                         enc = msEnc.ToArray();
-                        UnityEngine.Debug.Log("DATA_HEX: " + BitConverter.ToString(enc).Replace("-", string.Empty));
                     }
                 }
             }
@@ -87,31 +81,25 @@ namespace MDMulti
             string plaintext = null;
 
             // Create the AES obj with the specified key and IV
-            //using (Aes aesAlg = Aes.Create())
-            //{
-            Aes aesAlg = Aes.Create();
-                aesAlg.Key = d.Item2;
+            using (Aes aesAlg = Aes.Create())
+            {
+               aesAlg.Key = d.Item2;
 
-                byte[] IV = new byte[16];
-                byte[] cipherText = new byte[d.Item1.Length - IV.Length];
+               byte[] IV = new byte[16];
+               byte[] cipherText = new byte[d.Item1.Length - IV.Length];
 
-                Array.Copy(d.Item1, IV, IV.Length);
-                Array.Copy(d.Item1, IV.Length, cipherText, 0, cipherText.Length);
+               Array.Copy(d.Item1, IV, IV.Length);
+               Array.Copy(d.Item1, IV.Length, cipherText, 0, cipherText.Length);
 
-                aesAlg.IV = IV;
+               aesAlg.IV = IV;
 
-                aesAlg.Mode = CipherMode.CBC;
+               aesAlg.Mode = CipherMode.CBC;
+                
+               // Create a decrytor to perform the stream transform.
+               ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
-
-                UnityEngine.Debug.Log("DEC_KEY_HEX: " + BitConverter.ToString(aesAlg.Key).Replace("-", string.Empty));
-                UnityEngine.Debug.Log("DEC_IV_HEX: " + BitConverter.ToString(aesAlg.IV).Replace("-", string.Empty));
-                UnityEngine.Debug.Log("DEC_DATA_HEX: " + BitConverter.ToString(cipherText).Replace("-", string.Empty));
-
-            // Create a decrytor to perform the stream transform.
-            ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
-
-                // Create the streams used for decryption. 
-                /*using (var msDecrypt = new MemoryStream(cipherText))
+               // Create the streams used for decryption. 
+               using (var msDecrypt = new MemoryStream(cipherText))
                 {
                     using (var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
                     {
@@ -123,14 +111,8 @@ namespace MDMulti
                             plaintext = srDecrypt.ReadToEnd();
                         }
                     }
-                }*/
-                MemoryStream msDecrypt = new MemoryStream(cipherText);
-                CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
-                StreamReader srDecrypt = new StreamReader(csDecrypt);
-
-                plaintext = srDecrypt.ReadToEnd();
-
-            //}
+                }
+            }
             return plaintext;
         }
     }
