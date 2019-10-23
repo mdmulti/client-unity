@@ -26,7 +26,7 @@ namespace MDMulti.Net
             UnityEngine.Debug.LogError("SC_SEND_RES: " + res);
 
             return res;*/
-            return await base.Send(sdata);
+            return uf.DecryptStr2(await base.Send(uf.EncryptStr2(sdata)));
         }
     }
 }

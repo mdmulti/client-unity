@@ -12,17 +12,13 @@ namespace MDMulti
     {
         private static string TupleToString(Tuple<byte[], byte[]> t)
         {
-            UnityEngine.Debug.Log("TTS: 0: " + Encoding.ASCII.GetString(t.Item1));
-            UnityEngine.Debug.Log("TTS: 1: " + Encoding.ASCII.GetString(t.Item2));
-            return Encoding.ASCII.GetString(t.Item1) + "<MDMSEP>" + Encoding.ASCII.GetString(t.Item2);
+            return Convert.ToBase64String(t.Item1) + "<MDMSEP>" + Convert.ToBase64String(t.Item2);
         }
 
         private static Tuple<byte[], byte[]> StringToTuple(string s)
         {
             string[] arr = s.Split(new string[] { "<MDMSEP>" }, StringSplitOptions.None);
-            UnityEngine.Debug.Log("STT: 0: " + arr[0]);
-            UnityEngine.Debug.Log("STT: 1: " + arr[1]);
-            return new Tuple<byte[], byte[]>(Encoding.ASCII.GetBytes(arr[0]), Encoding.ASCII.GetBytes(arr[1]));
+            return new Tuple<byte[], byte[]>(Convert.FromBase64String(arr[0]), Convert.FromBase64String(arr[1]));
         }
 
         // --------------------
@@ -132,7 +128,7 @@ namespace MDMulti
                 CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read);
                 StreamReader srDecrypt = new StreamReader(csDecrypt);
 
-                //plaintext = srDecrypt.ReadToEnd;
+                plaintext = srDecrypt.ReadToEnd();
 
             //}
             return plaintext;

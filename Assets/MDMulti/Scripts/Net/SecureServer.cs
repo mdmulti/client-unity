@@ -23,7 +23,7 @@ namespace MDMulti.Net
 
         private string on(string input)
         {
-            //return uf.EncryptString(currentOnRecv(uf.DecryptString(input)));
+            return uf.EncryptStr2(currentOnRecv(uf.DecryptStr2(input)));
 
             /*UnityEngine.Debug.LogError("SS_ON_IN: " + input);
 
@@ -37,7 +37,7 @@ namespace MDMulti.Net
             UnityEngine.Debug.LogError("SS_ON_OUT: " + output);
 
             return output;*/
-            return currentOnRecv(input);
+            //return currentOnRecv(input);
         }
 
         public new void StopListening()

@@ -44,7 +44,7 @@ namespace MDMulti.Net
 
         public string StringFromBase64(string data)
         {
-            return EscapeHelper.B64UnEscape(Encoding.ASCII.GetString(Convert.FromBase64String(data)));
+            return Encoding.ASCII.GetString(Convert.FromBase64String(EscapeHelper.B64UnEscape(data)));
         }
     }
 
