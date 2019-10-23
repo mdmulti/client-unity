@@ -14,8 +14,7 @@ namespace MDMulti.Net
     {
         private IPEndPoint ipep;
 
-        private TcpClient tcp;
-        private NetworkStream tcp_netstream;
+        private UdpClient udp;
         
         public PlainClient(IPEndPoint ipep)
         {
@@ -24,22 +23,20 @@ namespace MDMulti.Net
 
         }
 
-        public string Send(string sdata)
+        public async Task<string> Send(string sdata)
         {
             // Convert the data to UTF8 and escape it
-            byte[] data = AddInfoData(Encoding.UTF8.GetBytes(EscapeHelper.B64Escape(sdata)));
+            byte[] data = AddInfoData(Encoding.ASCII.GetBytes(EscapeHelper.B64Escape(sdata)));
 
             // Send the data
-            tcp_netstream.Write(data, 0, data.Length);
-            tcp_netstream.Flush();
+            udp.Send(data, data.Length);
 
             // Recieve data back from the server
             // Buffer to store the response bytes.
-            byte[] responseDataBytes = new byte[1024];
+            var res = await udp.ReceiveAsync();
+            byte[] responseDataBytes = res.Buffer;
 
-            // Read the first batch of the TcpServer response bytes.
-            int bytes = tcp_netstream.Read(responseDataBytes, 0, responseDataBytes.Length);
-            string responseData = Encoding.ASCII.GetString(responseDataBytes, 0, bytes);
+            string responseData = Encoding.ASCII.GetString(responseDataBytes, 0, responseDataBytes.Length);
 
             // Parse the response (to make sure it's valid data) and send the actual message
             return ParseResponse(responseData);
@@ -48,15 +45,15 @@ namespace MDMulti.Net
         private void Setup()
         {
             // Create the TCP client
-            TcpClient ltcp = new TcpClient();
+            UdpClient udp = new UdpClient();
 
             // Disallow exclusive address/port bind use.
-            ltcp.ExclusiveAddressUse = false;
+            udp.ExclusiveAddressUse = false;
 
             // Attempt to connect to the server / destination
             try
             {
-                ltcp.Connect(ipep);
+                udp.Connect(ipep);
             }
             catch (SocketException ex)
             {
@@ -66,8 +63,7 @@ namespace MDMulti.Net
             // The connnection passed
 
             // Set variables
-            tcp = ltcp;
-            tcp_netstream = tcp.GetStream();
+            this.udp = udp;
         }
     }
 }

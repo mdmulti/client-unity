@@ -12,7 +12,7 @@ namespace MDMulti.Net
     {
         private int port;
 
-        private TcpListener tcp;
+        private UdpClient udp;
 
         protected bool isListening = false;
         protected CancellationTokenSource cts = new CancellationTokenSource();
@@ -27,69 +27,44 @@ namespace MDMulti.Net
 
         private void Setup()
         {
-            if (tcp == null)
+            if (udp == null)
             {
                 // Create the TCP client
-                TcpListener ltcp = new TcpListener(IPAddress.Any, port);
-
-                //ltcp.Start();
+                UdpClient udp = new UdpClient(port);
 
                 // Set variables
-                tcp = ltcp;
+                this.udp = udp;
             }
         }
 
-        protected async Task ListenTCP(CancellationToken token, Func<string, string> onReceive)
+        protected async Task ListenUDP(CancellationToken token, Func<string, string> onReceive)
         {
-            token.Register(() => tcp.Stop());
-
-            // Buffer to store the response bytes.
-            byte[] bytes = new byte[1024];
+            token.Register(() => udp.Close());
 
             try
             {
                 token.ThrowIfCancellationRequested();
                 while (true)
                 {
-                    // Start Listening for requests
-                    tcp.Start();
-
-                    // Accept an incoming connection
-                    TcpClient client = await tcp.AcceptTcpClientAsync();
-
-                    // Get a stream object for reading and writing
-                    NetworkStream stream = client.GetStream();
-
-                    // Counter
-                    int i;
-
-                    // Loop to receive all the data sent by the client.
-                    while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
-                    {
-                        // Translate data bytes to a UTF8 string.
-                        string data = Encoding.ASCII.GetString(bytes, 0, i);
-                        UnityEngine.Debug.Log("TCPGR Received: " + data);
-
-                        // Process the data sent by the client (call the specified function)
-                        string result_raw = onReceive(ParseResponse(data));
-
-                        // Add the MDMPEER header
-                        string result = GetInfoData() + EscapeHelper.B64Escape(result_raw);
-
-                        byte[] msg = Encoding.ASCII.GetBytes(result);
-
-                        // Send back a response.
-                        stream.Write(msg, 0, msg.Length);
-                        UnityEngine.Debug.Log("TCPGR Sent: " + data);
-                    }
-
-                    // Shutdown and end connection
-                    client.Close();
+                    var result = await udp.ReceiveAsync();
+                    var data = Encoding.UTF8.GetString(result.Buffer);
+                    byte[] res = AddInfoData(Encoding.ASCII.GetBytes(EscapeHelper.B64Escape(onReceive(ParseResponse(data)))));
+                    await udp.SendAsync(res, res.Length, result.RemoteEndPoint);
                 }
+            }
+            catch (ObjectDisposedException)
+            {
+                // This will happen when we cancel the task.  We can ignore this.
+            }
+            catch (SocketException)
+            {
+                token.ThrowIfCancellationRequested();
+                // Ignore this
             }
             catch (Exception ex)
             {
-                UnityEngine.Debug.LogError(ex);
+                token.ThrowIfCancellationRequested();
+                UnityEngine.Debug.Log("Ignoring bad UDP " + ex);
             }
         }
 
@@ -97,7 +72,7 @@ namespace MDMulti.Net
         {
             if (isListening) return;
             isListening = true;
-            await ListenTCP(cts.Token, onRecv);
+            await ListenUDP(cts.Token, onRecv);
         }
 
         public void StopListening()

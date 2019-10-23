@@ -18,14 +18,14 @@ namespace MDMulti.Net
             if (isListening) return;
             isListening = true;
             currentOnRecv = onRecv;
-            await ListenTCP(cts.Token, on);
+            await ListenUDP(cts.Token, on);
         }
 
         private string on(string input)
         {
             //return uf.EncryptString(currentOnRecv(uf.DecryptString(input)));
 
-            UnityEngine.Debug.LogError("SS_ON_IN: " + input);
+            /*UnityEngine.Debug.LogError("SS_ON_IN: " + input);
 
             string decIN = uf.DecryptStr2(input);
             UnityEngine.Debug.LogError("SS_ON_DECIN: " + decIN);
@@ -36,7 +36,8 @@ namespace MDMulti.Net
             string output = uf.EncryptStr2(funcRes);
             UnityEngine.Debug.LogError("SS_ON_OUT: " + output);
 
-            return output;
+            return output;*/
+            return currentOnRecv(input);
         }
 
         public new void StopListening()

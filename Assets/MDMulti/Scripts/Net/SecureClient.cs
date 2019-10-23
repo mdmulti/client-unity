@@ -1,31 +1,32 @@
 ﻿using System.Net;
+using System.Threading.Tasks;
 
 namespace MDMulti.Net
 {
     public class SecureClient : PlainClient
     {
         private UserFile uf;
+        private IPEndPoint ipep;
 
         public SecureClient(UserFile uf, IPEndPoint ipep) : base(ipep) {
             this.uf = uf;
         }
         
-        public new string Send(string sdata)
+        public new async Task<string> Send(string sdata)
         {
-            //return uf.DecryptString(base.Send(uf.EncryptString(sdata)));
-
-            UnityEngine.Debug.LogError("SC_SEND_INPUT: " + sdata);
+            /*UnityEngine.Debug.LogError("SC_SEND_INPUT: " + sdata);
 
             string enc = uf.EncryptStr2(sdata);
             UnityEngine.Debug.LogError("SC_SEND_INPUT_ENC: " + enc);
 
-            string res_enc = base.Send(enc);
+            string res_enc = await base.Send(enc);
             UnityEngine.Debug.LogError("SC_SEND_RES_ENC: " + res_enc);
 
             string res = uf.DecryptStr2(res_enc);
             UnityEngine.Debug.LogError("SC_SEND_RES: " + res);
 
-            return res;
+            return res;*/
+            return await base.Send(sdata);
         }
     }
 }

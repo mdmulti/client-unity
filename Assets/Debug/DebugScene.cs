@@ -72,7 +72,7 @@ public class DebugScene : MonoBehaviour
         //us.Save();
 
         MDMulti.Net.SecureClient sc = new MDMulti.Net.SecureClient(new UserFile("792F1D97A2740D45867B"), new System.Net.IPEndPoint(MDMulti.IPHelper.StringToAddressObject("127.0.0.1"), 59655));
-        sc.Send("TEST");
+        UnityEngine.Debug.LogWarning("Final: " + await sc.Send("TEST"));
     }
 
     private async void l_int(ServerDetails sfe)
