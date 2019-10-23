@@ -31,6 +31,7 @@ namespace MDMulti.Net
 
             // Send the data
             tcp_netstream.Write(data, 0, data.Length);
+            tcp_netstream.Flush();
 
             // Recieve data back from the server
             // Buffer to store the response bytes.

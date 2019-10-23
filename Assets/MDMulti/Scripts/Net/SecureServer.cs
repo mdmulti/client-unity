@@ -27,13 +27,13 @@ namespace MDMulti.Net
 
             UnityEngine.Debug.LogError("SS_ON_IN: " + input);
 
-            string decIN = uf.DecryptB64(input);
+            string decIN = uf.DecryptStr2(input);
             UnityEngine.Debug.LogError("SS_ON_DECIN: " + decIN);
 
             string funcRes = currentOnRecv(decIN);
             UnityEngine.Debug.LogError("SS_ON_FUNCRES: " + funcRes);
 
-            string output = uf.EncryptB64(funcRes);
+            string output = uf.EncryptStr2(funcRes);
             UnityEngine.Debug.LogError("SS_ON_OUT: " + output);
 
             return output;

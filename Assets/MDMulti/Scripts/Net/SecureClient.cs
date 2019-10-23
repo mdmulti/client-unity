@@ -16,13 +16,13 @@ namespace MDMulti.Net
 
             UnityEngine.Debug.LogError("SC_SEND_INPUT: " + sdata);
 
-            string enc = uf.EncryptB64(sdata);
+            string enc = uf.EncryptStr2(sdata);
             UnityEngine.Debug.LogError("SC_SEND_INPUT_ENC: " + enc);
 
             string res_enc = base.Send(enc);
             UnityEngine.Debug.LogError("SC_SEND_RES_ENC: " + res_enc);
 
-            string res = uf.DecryptB64(res_enc);
+            string res = uf.DecryptStr2(res_enc);
             UnityEngine.Debug.LogError("SC_SEND_RES: " + res);
 
             return res;

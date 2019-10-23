@@ -94,49 +94,40 @@ namespace MDMulti
             StorageHelper.SaveToFileAlternate(JsonConvert.SerializeObject(json), ID + ".mdmc");
         }
 
-        public byte[] EncryptBytes(byte[] data)
+        /*public byte[] EncryptBytes(byte[] data)
         {
             UnityEngine.Debug.Log("ENC_BEF: " + Encoding.ASCII.GetString(data));
             RSACryptoServiceProvider csp = Cert.PublicKey.Key as RSACryptoServiceProvider;
             byte[] enc = csp.Encrypt(data, false);
             UnityEngine.Debug.Log("ENC_AFT: " + Encoding.ASCII.GetString(enc));
             return enc;
+        }*/
+
+        public string EncryptStr2(string raw)
+        {
+            string enc_str_not_64 = AES.EncToStr(raw);
+
+            //byte[] enc_b_not_64 = Encoding.ASCII.GetBytes(enc_str_not_64);
+
+            //string enc_str_64 = Convert.ToBase64String(enc_b_not_64);
+
+            //return enc_str_64;
+
+            return enc_str_not_64;
+
         }
 
-        public byte[] DecryptBytes(byte[] data)
+        public string DecryptStr2(string enc_str_64)
         {
-            UnityEngine.Debug.Log("DEC_BEF: " + Encoding.ASCII.GetString(data));
-            RSACryptoServiceProvider csp = Cert.PrivateKey as RSACryptoServiceProvider;
-            byte[] enc = csp.Encrypt(data, false);
-            UnityEngine.Debug.Log("DEC_AFT: " + Encoding.ASCII.GetString(enc));
-            return enc;
-        }
+            ///byte[] enc_b_not_64 = Convert.FromBase64String(enc_str_64);
 
-        public string EncryptB64(string data)
-        {
-            byte[] b_enc_in_not = EncryptBytes(Encoding.ASCII.GetBytes(data));
-            UnityEngine.Debug.Log("ENC_64--ENCODED NOT 64: " + Encoding.ASCII.GetString(b_enc_in_not));
+            //string enc_str_not_64 = Encoding.ASCII.GetString(enc_b_not_64);
 
-            string enc64 = Convert.ToBase64String(b_enc_in_not);
-            UnityEngine.Debug.Log("ENC_64--ENCODED YES 64: " + enc64);
+            //string raw = AES.DecToStr(enc_str_not_64);
 
-            return enc64;
-            //return Encoding.ASCII.GetString(EncryptBytes(Convert.ToBase64String(Encoding.ASCII.GetBytes(data))));
-        }
+            //return raw;
 
-        public string DecryptB64(string data)
-        {
-            byte[] data_not64 = Convert.FromBase64String(data);
-
-            UnityEngine.Debug.Log("DEC_64--RAW YES 64: " + data);
-            UnityEngine.Debug.Log("DEC_64--RAW NOT 64: " + Encoding.ASCII.GetString(data_not64));
-
-            byte[] dec_not64 = DecryptBytes(data_not64);
-
-            UnityEngine.Debug.Log("DEC_64--RES: " + Encoding.ASCII.GetString(dec_not64));
-
-            return Encoding.ASCII.GetString(dec_not64);
-            //return Encoding.ASCII.GetString(DecryptBytes(Convert.FromBase64String(data)));
+            return AES.DecToStr(enc_str_64);
         }
 
         public class InvalidCertificateException : Exception
