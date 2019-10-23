@@ -63,22 +63,24 @@ public class DebugScene : MonoBehaviour
 
     public async void Latest()
     {
-        //Debug.LogError("L");
-        //sfd = new ServerFoundEvent.serverFoundDel(l_int);
-        //ServerFoundEvent.OnServerFound += sfd;
+        Debug.Log("L");
+        
 
-        //UserFile us = new UserFile("792F1D97A2740D45867B");
-        //Debug.Log(us.ID);
-        //us.Save();
+        // ---------- SECURE CLIENT TESTING ----------
+        //MDMulti.Net.SecureClient sc = new MDMulti.Net.SecureClient(new UserFile("792F1D97A2740D45867B"), new System.Net.IPEndPoint(MDMulti.IPHelper.StringToAddressObject("127.0.0.1"), 59655));
+        //Debug.LogWarning("Final: " + await sc.Send("TEST"));
 
-        MDMulti.Net.SecureClient sc = new MDMulti.Net.SecureClient(new UserFile("792F1D97A2740D45867B"), new System.Net.IPEndPoint(MDMulti.IPHelper.StringToAddressObject("127.0.0.1"), 59655));
-        UnityEngine.Debug.LogWarning("Final: " + await sc.Send("TEST"));
+
+        // ---------- PLAIN CLIENT PEER CONNECTION TESTING ----------
+        sfd = new ServerFoundEvent.serverFoundDel(l_int);
+        ServerFoundEvent.OnServerFound += sfd;
     }
 
     private async void l_int(ServerDetails sfe)
     {
+        // ---------- PLAIN CLIENT PEER CONNECTION TESTING ----------
         Debug.LogError("L_INT");
-        UnityEngine.Debug.LogError(new PeerConnectionClient(sfe).IsValidPeer());
+        Debug.LogError(await new PeerConnectionClient(sfe).IsValidPeer());
         Debug.LogError("L_INT_REM_INPROG");
         ServerFoundEvent.OnServerFound -= sfd;
         Debug.LogError("L_INT_REM_DONE");
@@ -88,20 +90,19 @@ public class DebugScene : MonoBehaviour
     {
         Debug.Log("L2");
 
-        MDMulti.Net.SecureServer ss = new MDMulti.Net.SecureServer(new UserFile("792F1D97A2740D45867B"), 59655);
 
-        ss.StartListening(l2onrecv);
-
-        //System.Net.IPEndPoint ipe = new System.Net.IPEndPoint(IPHelper.ToAddressObject(IPHelper.ToBytes("127.0.0.1")), 27423);
-        //NetSend.Send(ipe, NetSend.DataTypes.UnreliableUDP, "TEST");
-        //MDMulti.Net.GeneralRecieve gs = new MDMulti.Net.GeneralRecieve(ipe, MDMulti.Net.DataTypes.UnreliableUDP);
-        //gs.StartListening();
+        // ---------- SECURE CLIENT TESTING ----------
+        //MDMulti.Net.SecureServer ss = new MDMulti.Net.SecureServer(new UserFile("792F1D97A2740D45867B"), 59655);
+        //ss.StartListening(l2onrecv);
     }
-
+    
+    /*
+    ---------- SECURE CLIENT TESTING ----------
     public string l2onrecv(string s)
     {
         return "MEMES";
     }
+    */
 
     public void GetServerCert()
     {
