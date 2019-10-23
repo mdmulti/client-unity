@@ -47,8 +47,16 @@ namespace MDMulti.Net
                 while (true)
                 {
                     var result = await udp.ReceiveAsync();
-                    var data = Encoding.UTF8.GetString(result.Buffer);
-                    byte[] res = AddInfoData(Encoding.ASCII.GetBytes(EscapeHelper.B64Escape(onReceive(ParseResponse(data)))));
+
+                    // Convert the byte[] response to a string and parse it
+                    string data = ParseResponse(Encoding.UTF8.GetString(result.Buffer));
+
+                    // Run the func and convert it's output to base64
+                    string onrecv_64 = StringToBase64(onReceive(data));
+
+
+                    byte[] res = AddInfoData(Encoding.ASCII.GetBytes(onrecv_64));
+
                     await udp.SendAsync(res, res.Length, result.RemoteEndPoint);
                 }
             }

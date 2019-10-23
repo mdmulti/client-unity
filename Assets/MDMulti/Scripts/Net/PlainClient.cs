@@ -26,7 +26,7 @@ namespace MDMulti.Net
         public async Task<string> Send(string sdata)
         {
             // Convert the data to UTF8 and escape it
-            byte[] data = AddInfoData(Encoding.ASCII.GetBytes(EscapeHelper.B64Escape(sdata)));
+            byte[] data = AddInfoData(Encoding.ASCII.GetBytes(StringToBase64(sdata)));
 
             // Send the data
             udp.Send(data, data.Length);
@@ -39,6 +39,7 @@ namespace MDMulti.Net
             string responseData = Encoding.ASCII.GetString(responseDataBytes, 0, responseDataBytes.Length);
 
             // Parse the response (to make sure it's valid data) and send the actual message
+            // This also base64 decodes it
             return ParseResponse(responseData);
         }
 

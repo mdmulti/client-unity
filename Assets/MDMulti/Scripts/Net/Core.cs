@@ -26,15 +26,25 @@ namespace MDMulti.Net
 
         }
 
-        public static string ParseResponse(string data)
+        public string ParseResponse(string data)
         {
             if (data.StartsWith(GetInfoData(), StringComparison.Ordinal))
             {
-                return EscapeHelper.B64UnEscape(data.Split('/')[2]);
+                return StringFromBase64(data.Split('/')[2]);
             } else
             {
                 return "MDMPEER_ERR_INVALID_RESPONSE";
             }
+        }
+
+        public string StringToBase64(string data)
+        {
+            return EscapeHelper.B64Escape(Convert.ToBase64String(Encoding.ASCII.GetBytes(data)));
+        }
+
+        public string StringFromBase64(string data)
+        {
+            return EscapeHelper.B64UnEscape(Encoding.ASCII.GetString(Convert.FromBase64String(data)));
         }
     }
 
