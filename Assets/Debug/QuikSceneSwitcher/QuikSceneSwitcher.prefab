@@ -309,7 +309,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4868933538120146144}
-        m_MethodName: Next
+        m_MethodName: N
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -517,7 +517,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4868933538120146144}
-        m_MethodName: Prev
+        m_MethodName: P
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

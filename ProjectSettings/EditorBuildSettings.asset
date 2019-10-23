@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Debug/Debug-AccPanel.unity
     guid: e596707e108163948901415965f72551
+  - enabled: 1
+    path: Assets/Debug/ConnectionTest.unity
+    guid: e8c7cb827ae5b4d42b1844739d413924
   m_configObjects: {}
