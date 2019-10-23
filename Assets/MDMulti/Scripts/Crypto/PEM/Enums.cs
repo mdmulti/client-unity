@@ -1,4 +1,4 @@
-﻿namespace MDMulti.PEM
+﻿namespace MDMulti.Crypto.PEM
 {
     public enum PemStringType
     {

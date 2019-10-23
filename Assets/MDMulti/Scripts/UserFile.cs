@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using MDMulti.Crypto;
+using Newtonsoft.Json;
 using System;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MDMulti
 {
@@ -94,39 +94,13 @@ namespace MDMulti
             StorageHelper.SaveToFileAlternate(JsonConvert.SerializeObject(json), ID + ".mdmc");
         }
 
-        /*public byte[] EncryptBytes(byte[] data)
-        {
-            UnityEngine.Debug.Log("ENC_BEF: " + Encoding.ASCII.GetString(data));
-            RSACryptoServiceProvider csp = Cert.PublicKey.Key as RSACryptoServiceProvider;
-            byte[] enc = csp.Encrypt(data, false);
-            UnityEngine.Debug.Log("ENC_AFT: " + Encoding.ASCII.GetString(enc));
-            return enc;
-        }*/
-
         public string EncryptStr2(string raw)
         {
-            string enc_str_not_64 = AES.EncToStr(raw);
-
-            //byte[] enc_b_not_64 = Encoding.ASCII.GetBytes(enc_str_not_64);
-
-            //string enc_str_64 = Convert.ToBase64String(enc_b_not_64);
-
-            //return enc_str_64;
-
-            return enc_str_not_64;
-
+            return AES.EncToStr(raw);
         }
 
         public string DecryptStr2(string enc_str_64)
         {
-            ///byte[] enc_b_not_64 = Convert.FromBase64String(enc_str_64);
-
-            //string enc_str_not_64 = Encoding.ASCII.GetString(enc_b_not_64);
-
-            //string raw = AES.DecToStr(enc_str_not_64);
-
-            //return raw;
-
             return AES.DecToStr(enc_str_64);
         }
 

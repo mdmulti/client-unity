@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MDMulti.PEM
+namespace MDMulti.Crypto.PEM
 {
     internal class RSAParameterTraits
     {

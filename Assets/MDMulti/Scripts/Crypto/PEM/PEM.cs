@@ -3,9 +3,9 @@ using System.Security.Cryptography;
 using System.IO;
 using System.Diagnostics;
 
-namespace MDMulti.PEM
+namespace MDMulti.Crypto.PEM
 {
-    public class Crypto
+    public class PEM
     {
         /// <summary>
         /// This helper function parses an RSA private key using the ASN.1 format

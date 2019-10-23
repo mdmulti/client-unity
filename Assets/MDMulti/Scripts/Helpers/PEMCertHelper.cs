@@ -1,4 +1,4 @@
-﻿using MDMulti.PEM;
+﻿using MDMulti.Crypto.PEM;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
@@ -13,7 +13,7 @@ namespace MDMulti
 
             X509Certificate2 certificate = new X509Certificate2(certBuffer, "", X509KeyStorageFlags.Exportable);
 
-            RSACryptoServiceProvider prov = Crypto.DecodeRsaPrivateKey(keyBuffer);
+            RSACryptoServiceProvider prov = PEM.DecodeRsaPrivateKey(keyBuffer);
             certificate.PrivateKey = prov;
 
             return certificate;
