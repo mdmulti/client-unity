@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MDMulti.LAN.Discovery.Providers
 {
-    public class Multicast
+    public class Multicast : Core
     {
         #region Dual
 
@@ -16,8 +16,6 @@ namespace MDMulti.LAN.Discovery.Providers
         #endregion
 
         #region Broadcast
-        
-        private static PeerConnectionServer pcs;
 
         private static bool isBroadcasting = false;
 
@@ -52,18 +50,33 @@ namespace MDMulti.LAN.Discovery.Providers
 
         public static async void StartBroadcasting(UserFile hostPlayer)
         {
+            // Make sure we aren't already broadcasting
             if (isBroadcasting) return;
-            isBroadcasting = true;
-            Editor.Factors.ActiveItems.MulticastSend = isBroadcasting;
-            pcs = new PeerConnectionServer(PortHelper.GetRandomAvailablePort(), hostPlayer);
-            await BeginBroadcastingAsync(BroadcastCts.Token, pcs.port);
 
+            // Set some variables for later
+            isBroadcasting = true;
+            Editor.Factors.ActiveItems.MulticastSend = isBroadcasting; // This is used for the custom editor windows.
+
+            // Start the PeerConnectionServer if it hasn't been already
+            isPcs_Multicast = true;
+            StartPcsIfNeeded(hostPlayer);
+
+            // Start broadcasting
+            await BeginBroadcastingAsync(BroadcastCts.Token, GetPcsPort());
         }
 
         public static void StopBroadcasting()
         {
+            // Cancel the token, this stops the broadcast loop
             BroadcastCts.Cancel();
-            pcs.Stop();
+
+            // Set the 'are we using PCS' variable to false
+            isPcs_Multicast = false;
+
+            // If no other providers are using PCS, stop the server.
+            StopPcsIfNeeded();
+
+            // Set some other variables
             isBroadcasting = false;
             Editor.Factors.ActiveItems.MulticastSend = isBroadcasting;
         }
