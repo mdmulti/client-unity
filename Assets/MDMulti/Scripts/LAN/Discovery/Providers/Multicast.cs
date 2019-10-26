@@ -16,14 +16,16 @@ namespace MDMulti.LAN.Discovery.Providers
         #endregion
 
         #region Broadcast
+        
+        private static PeerConnectionServer pcs;
 
         private static bool isBroadcasting = false;
 
         private static CancellationTokenSource BroadcastCts = new CancellationTokenSource();
 
-        private static async Task BeginBroadcastingAsync(CancellationToken token)
+        private static async Task BeginBroadcastingAsync(CancellationToken token, int port)
         {
-            byte[] buffer = new Message().Buffer();
+            byte[] buffer = new Message(port).Buffer();
             var client = new UdpClient(AddressFamily.InterNetwork);
             client.MulticastLoopback = true;
             client.JoinMulticastGroup(BroadcastEndpoint.Address);
@@ -48,18 +50,20 @@ namespace MDMulti.LAN.Discovery.Providers
             }
         }
 
-        public static async void StartBroadcasting()
+        public static async void StartBroadcasting(UserFile hostPlayer)
         {
             if (isBroadcasting) return;
             isBroadcasting = true;
             Editor.Factors.ActiveItems.MulticastSend = isBroadcasting;
-            await BeginBroadcastingAsync(BroadcastCts.Token);
-            
+            pcs = new PeerConnectionServer(PortHelper.GetRandomAvailablePort(), hostPlayer);
+            await BeginBroadcastingAsync(BroadcastCts.Token, pcs.port);
+
         }
 
         public static void StopBroadcasting()
         {
             BroadcastCts.Cancel();
+            pcs.Stop();
             isBroadcasting = false;
             Editor.Factors.ActiveItems.MulticastSend = isBroadcasting;
         }

@@ -6,9 +6,9 @@ namespace MDMulti_DEBUG.DebugScene
 {
     public class LANDiscovery : MonoBehaviour
     {
-        public void MulticastStart()
+        public async void MulticastStart()
         {
-            Multicast.StartBroadcasting();
+            Multicast.StartBroadcasting(new UserFile(await CertHelper.GetCertificateFromFile("p4.crt")));
         }
 
         public void MulticastStop()
