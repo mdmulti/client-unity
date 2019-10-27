@@ -26,7 +26,7 @@ namespace MDMulti.Net
         public async Task<string> Send(string sdata)
         {
             // Convert the data to UTF8 and escape it
-            byte[] data = AddInfoData(Encoding.ASCII.GetBytes(StringToBase64(sdata)));
+            byte[] data = GenerateAndAddHash(AddInfoData(Encoding.ASCII.GetBytes(StringToBase64(sdata))));
 
             // Send the data
             udp.Send(data, data.Length);

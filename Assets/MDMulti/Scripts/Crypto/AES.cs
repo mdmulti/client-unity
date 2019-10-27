@@ -35,6 +35,7 @@ namespace MDMulti.Crypto
 
             using (Aes aesAlg = Aes.Create())
             {
+                // TODO: Is this truly random?
                 aesAlg.GenerateKey();
                 aesAlg.GenerateIV();
 

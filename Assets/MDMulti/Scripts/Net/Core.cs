@@ -60,7 +60,23 @@ namespace MDMulti.Net
         {
             if (data.StartsWith(GetInfoData(), StringComparison.Ordinal))
             {
-                return StringFromBase64(data.Split('_')[2]);
+                //UnityEngine.Debug.Log("PARSE_DATA: " + data);
+                var sda = SplitHashAndMessage(Encoding.ASCII.GetBytes(data));
+                //UnityEngine.Debug.Log("PD 1: " + sda.Item2);
+                //UnityEngine.Debug.Log("PDX: " + SHA2Helper.ComputeHashStr(Encoding.ASCII.GetString(sda.Item1)));
+
+                // If the message's hash matches the generated hash
+                if (sda.Item2 == SHA2Helper.ComputeHashStr(Encoding.ASCII.GetString(sda.Item1)))
+                {
+                    UnityEngine.Debug.Log("MATCH");
+                    UnityEngine.Debug.Log(Encoding.ASCII.GetString(sda.Item1).Split('_')[2]);
+                    UnityEngine.Debug.Log(data);
+                    return StringFromBase64(Encoding.ASCII.GetString(sda.Item1).Split('_')[2]);
+                } else
+                {
+                    return "MDMNET_ERR_INVALID_HASH";
+                }
+                //return StringFromBase64(data.Split('_')[2]);
             } else
             {
                 return "MDMNET_ERR_INVALID_RESPONSE";

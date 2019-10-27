@@ -55,7 +55,7 @@ namespace MDMulti.Net
                     string onrecv_64 = StringToBase64(onReceive(data));
 
 
-                    byte[] res = AddInfoData(Encoding.ASCII.GetBytes(onrecv_64));
+                    byte[] res = GenerateAndAddHash(AddInfoData(Encoding.ASCII.GetBytes(onrecv_64)));
 
                     await udp.SendAsync(res, res.Length, result.RemoteEndPoint);
                 }
