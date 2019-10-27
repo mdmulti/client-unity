@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 
 namespace MDMulti.Net
@@ -24,6 +26,34 @@ namespace MDMulti.Net
 
             return res;
 
+        }
+
+        public static byte[] GenerateAndAddHash(byte[] data)
+        {
+            string hashStr = SHA2Helper.ComputeHashStr(Encoding.UTF8.GetString(data));
+            byte[] hash = Encoding.UTF8.GetBytes(hashStr);
+
+            // We now have, in the hash byte array, the hex output of the hash function
+
+            byte[] res = new byte[data.Length + hash.Length];
+            Buffer.BlockCopy(data, 0, res, 0, data.Length);
+            Buffer.BlockCopy(hash, 0, res, data.Length, hash.Length);
+
+            return res;
+        }
+
+        public static string GetHash(byte[] data)
+        {
+            byte[] res = new byte[64];
+            Buffer.BlockCopy(data, (data.Length - 64), res, 0, 64);
+            return Encoding.UTF8.GetString(res);
+        }
+
+        public static Tuple<byte[], string> SplitHashAndMessage(byte[] data)
+        {
+            byte[] data_res = new byte[data.Length - 64];
+            Buffer.BlockCopy(data, 0, data_res, 0, data.Length - 64);
+            return new Tuple<byte[], string>(data_res, GetHash(data));
         }
 
         public string ParseResponse(string data)
