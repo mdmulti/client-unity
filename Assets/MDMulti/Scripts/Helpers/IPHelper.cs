@@ -13,5 +13,10 @@ namespace MDMulti
         {
             return new IPAddress(b);
         }
+
+        public static IPAddress StringToAddressObject(string addr)
+        {
+            return ToAddressObject(ToBytes(addr));
+        }
     }
 }

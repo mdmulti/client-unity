@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MDMulti.LAN.Discovery.Providers
 {
-    public class Multicast
+    public class Multicast : Core
     {
         #region Dual
 
@@ -21,9 +21,9 @@ namespace MDMulti.LAN.Discovery.Providers
 
         private static CancellationTokenSource BroadcastCts = new CancellationTokenSource();
 
-        private static async Task BeginBroadcastingAsync(CancellationToken token)
+        private static async Task BeginBroadcastingAsync(CancellationToken token, int port)
         {
-            byte[] buffer = new Message().Buffer();
+            byte[] buffer = new Message(port).Buffer();
             var client = new UdpClient(AddressFamily.InterNetwork);
             client.MulticastLoopback = true;
             client.JoinMulticastGroup(BroadcastEndpoint.Address);
@@ -48,18 +48,35 @@ namespace MDMulti.LAN.Discovery.Providers
             }
         }
 
-        public static async void StartBroadcasting()
+        public static async void StartBroadcasting(UserFile hostPlayer)
         {
+            // Make sure we aren't already broadcasting
             if (isBroadcasting) return;
+
+            // Set some variables for later
             isBroadcasting = true;
-            Editor.Factors.ActiveItems.MulticastSend = isBroadcasting;
-            await BeginBroadcastingAsync(BroadcastCts.Token);
-            
+            Editor.Factors.ActiveItems.MulticastSend = isBroadcasting; // This is used for the custom editor windows.
+
+            // Start the PeerConnectionServer if it hasn't been already
+            isPcs_Multicast = true;
+            StartPcsIfNeeded(hostPlayer);
+
+            // Start broadcasting
+            await BeginBroadcastingAsync(BroadcastCts.Token, GetPcsPort());
         }
 
         public static void StopBroadcasting()
         {
+            // Cancel the token, this stops the broadcast loop
             BroadcastCts.Cancel();
+
+            // Set the 'are we using PCS' variable to false
+            isPcs_Multicast = false;
+
+            // If no other providers are using PCS, stop the server.
+            StopPcsIfNeeded();
+
+            // Set some other variables
             isBroadcasting = false;
             Editor.Factors.ActiveItems.MulticastSend = isBroadcasting;
         }

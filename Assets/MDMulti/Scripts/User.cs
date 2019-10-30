@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using UnityEngine.Networking;
+﻿using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 
 using Debug = UnityEngine.Debug;
 
@@ -7,7 +7,7 @@ namespace MDMulti
 {
     public class User
     {
-        public static async void Create()
+        public static async Task<UserFile> CreateNewProfile()
         {
             Rest.RequestResponse res = await Rest.GetAsync("users/create");
             Debug.Log("RES TYPE: " + res.Type());
@@ -15,14 +15,22 @@ namespace MDMulti
             Debug.Log("RES PROTO: " + res.ProtocolVersion());
             Debug.Log("RES DATA: " + res.ResponseData());
 
-            if (res.ResponseCode() == 201)
+            string contentType;
+            res.Headers().TryGetValue("Content-Type", out contentType);
+
+            if (res.ResponseCode() == 201 && contentType.Contains("application/x-mdm-keypair"))
             {
-                string certSerial;
-                res.Headers().TryGetValue("X-MDM-CreatedCertSerial", out certSerial);
+                // Create the certificate and private key c# objects
+                X509Certificate2 c = PEMCertHelper.GetCertificateFromDualPEM(res.ResponseData());
 
-                Debug.Log("CERT SERIAL: " + certSerial);
-
-                StorageHelper.SaveToFile(res.ResponseData(), certSerial + ".user.crt");
+                // Use that to create the UserFile object
+                return new UserFile(c);
+            } else
+            {
+                // Maybe throw an Exception here?
+                // Example causes: outdated server / wrong url / server offline
+                Debug.LogError("USER CREATENEW PROFILE RES ERROR");
+                return null;
             }
         }
     }

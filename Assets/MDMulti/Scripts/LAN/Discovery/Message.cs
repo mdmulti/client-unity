@@ -20,14 +20,20 @@ namespace MDMulti.LAN.Discovery
         /// <summary>
         /// Constructor for creating Multicast / Broadcast messages.
         /// </summary>
-        public Message()
+        public Message(int port)
         {
             server = "MDMulti";
             protocolVersion = Rest.ProtocolVersion;
             escapedApplicationName = EscapeHelper.Escape(Mono.Options.Instance.appName);
             ip = ConnectionTests.GetLANIP().ToString();
-            port = 69;
+            this.port = port;
+            UnityEngine.Debug.Log("MPORT: " + port);
         }
+
+        /// <summary>
+        /// Constructor for creating Multicast / Broadcast messages.
+        /// </summary>
+        public Message() : this(69) { }
 
         public byte[] Buffer()
         {
