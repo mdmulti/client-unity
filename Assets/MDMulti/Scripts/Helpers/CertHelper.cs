@@ -10,7 +10,7 @@ namespace MDMulti
 {
     public class CertHelper
     {
-        public static readonly string oid_base = "1.3.6.1.4.1.54622.0.1";
+        public static readonly string oid_base = ConstantsHelper.Get().Oid.Base;
         private static readonly string oid_client_proto_version = oid_base + ".1";
         private static readonly string oid_type = oid_base + ".2";
 

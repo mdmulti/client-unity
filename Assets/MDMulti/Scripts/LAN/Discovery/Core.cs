@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
+using MDMulti.Constants;
 
 namespace MDMulti.LAN.Discovery
 {
     public class Core
     {
+        protected static Lan constants = ConstantsHelper.Get().Lan;
+
         public static WaitForSeconds waitForSeconds = new WaitForSeconds(1.5f);
 
         private static PeerConnectionServer pcs;

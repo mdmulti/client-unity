@@ -11,7 +11,7 @@ namespace MDMulti.LAN.Discovery.Providers
     {
         #region Dual
 
-        private static IPEndPoint BroadcastEndpoint = new IPEndPoint(IPAddress.Parse("224.5.125.85"), 29571);
+        private static IPEndPoint BroadcastEndpoint = new IPEndPoint(IPAddress.Parse(constants.Multicast.Address), constants.Multicast.Port);
 
         #endregion
 

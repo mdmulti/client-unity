@@ -8,8 +8,9 @@ namespace MDMulti_DEBUG.DebugScene
         public void Latest1()
         {
             Debug.Log("L");
-            Debug.Log(MDMulti.SHA2Helper.ComputeHash(new byte[0]));
-            Debug.Log(MDMulti.SHA2Helper.ComputeHashStr(""));
+            //Debug.Log(MDMulti.SHA2Helper.ComputeHash(new byte[0]));
+            //Debug.Log(MDMulti.SHA2Helper.ComputeHashStr(""));
+            MDMulti.ConstantsHelper.Test();
         }
 
         public void Latest2()
