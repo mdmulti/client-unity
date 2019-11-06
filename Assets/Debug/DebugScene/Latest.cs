@@ -5,12 +5,29 @@ namespace MDMulti_DEBUG.DebugScene
 {
     public class Latest : MonoBehaviour
     {
-        public void Latest1()
+        public async void Latest1()
         {
             Debug.Log("L");
             //Debug.Log(MDMulti.SHA2Helper.ComputeHash(new byte[0]));
             //Debug.Log(MDMulti.SHA2Helper.ComputeHashStr(""));
-            MDMulti.ConstantsHelper.Test();
+            
+            //MDMulti.ConstantsHelper.Test();
+
+
+            // Doesn't really fit in .NET
+
+            // KEYDB Testing
+            MDMulti.Net.KeyDB.KeyFile s = MDMulti.Net.KeyDB.createNewFile();
+            MDMulti.Net.KeyDB.KeyItem it = new MDMulti.Net.KeyDB.KeyItem();
+
+            it.x509Pub = await MDMulti.CertHelper.GetCertificateFromFile("p4.crt");
+
+            UnityEngine.Debug.Log(it.actualID);
+            UnityEngine.Debug.Log(it.x509Pub);
+
+            s.keys.Add(it);
+
+            s.SaveToFile();
         }
 
         public void Latest2()
