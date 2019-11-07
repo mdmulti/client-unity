@@ -1,15 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace MDMulti.Net
+namespace MDMulti
 {
     public class KeyDB
     {
-        public static KeyFile createNewFile()
+        public static KeyFile CreateNewFile()
         {
             return new KeyFile();
+        }
+
+        public static async Task<KeyFile> LoadFromFile()
+        {
+            string data = Encoding.UTF8.GetString(await StorageHelper.ReadFileByte("peerdb.mdm.json"));
+            return JsonConvert.DeserializeObject<KeyFile>(data);
         }
 
         /// <summary>
@@ -63,13 +71,12 @@ namespace MDMulti.Net
 
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
-                throw new NotImplementedException("Unnecessary because CanRead is false. The type will skip the converter.");
+                byte[] certData = Convert.FromBase64String((string)reader.Value);
+                return new X509Certificate2(certData);
             }
 
-            public override bool CanRead
-            {
-                get { return false; }
-            }
+            // CanRead is not required as it is enabled by default
+            // It is also takes no arguments
 
             public override bool CanConvert(Type objectType)
             {

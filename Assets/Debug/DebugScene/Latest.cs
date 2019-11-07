@@ -17,8 +17,8 @@ namespace MDMulti_DEBUG.DebugScene
             // Doesn't really fit in .NET
 
             // KEYDB Testing
-            MDMulti.Net.KeyDB.KeyFile s = MDMulti.Net.KeyDB.createNewFile();
-            MDMulti.Net.KeyDB.KeyItem it = new MDMulti.Net.KeyDB.KeyItem();
+            MDMulti.KeyDB.KeyFile s = MDMulti.KeyDB.CreateNewFile();
+            MDMulti.KeyDB.KeyItem it = new MDMulti.KeyDB.KeyItem();
 
             it.x509Pub = await MDMulti.CertHelper.GetCertificateFromFile("p4.crt");
 
@@ -30,8 +30,9 @@ namespace MDMulti_DEBUG.DebugScene
             s.SaveToFile();
         }
 
-        public void Latest2()
+        public async void Latest2()
         {
+            /*
             Debug.Log("L2");
             byte[] s = MDMulti.Net.Core.GenerateAndAddHash(Encoding.UTF8.GetBytes("This is a SHA256 function."));
             Debug.Log(MDMulti.Net.Core.GetHash(s));
@@ -42,6 +43,13 @@ namespace MDMulti_DEBUG.DebugScene
 
             Debug.Log("MSG: " + Encoding.UTF8.GetString(ss.Item1));
             Debug.Log("HASH: " + ss.Item2);
+            */
+
+            var kf = await MDMulti.KeyDB.LoadFromFile();
+
+            Debug.Log((kf).keys[0].actualID);
+            Debug.Log(MDMulti.CertHelper.IsUserCertificate(kf.keys[0].x509Pub));
+
         }
     }
 }
