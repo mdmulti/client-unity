@@ -39,6 +39,17 @@ namespace MDMulti
                 StorageHelper.SaveToFileAlternate(JsonConvert.SerializeObject(this), "peerdb.mdm.json");
             }
             
+            /// <summary>
+            /// Add a new certificate item to the database.
+            /// </summary>
+            /// <param name="cert"></param>
+            public void AddX509(X509Certificate2 cert)
+            {
+                KeyItem ki = new KeyItem();
+                ki.x509Pub = cert;
+                keys.Add(ki);
+            }
+            
         }
 
         /// <summary>

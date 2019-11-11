@@ -10,7 +10,7 @@ namespace MDMulti_DEBUG.DebugScene
             Debug.Log("L");
             //Debug.Log(MDMulti.SHA2Helper.ComputeHash(new byte[0]));
             //Debug.Log(MDMulti.SHA2Helper.ComputeHashStr(""));
-            
+
             //MDMulti.ConstantsHelper.Test();
 
 
@@ -26,6 +26,7 @@ namespace MDMulti_DEBUG.DebugScene
             UnityEngine.Debug.Log(it.x509Pub);
 
             s.keys.Add(it);
+            s.AddX509(await MDMulti.CertHelper.GetCertificateFromFile("p4.crt"));
 
             s.SaveToFile();
         }
