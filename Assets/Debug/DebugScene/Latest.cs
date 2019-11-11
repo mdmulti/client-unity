@@ -18,14 +18,8 @@ namespace MDMulti_DEBUG.DebugScene
 
             // KEYDB Testing
             MDMulti.KeyDB.KeyFile s = MDMulti.KeyDB.CreateNewFile();
-            MDMulti.KeyDB.KeyItem it = new MDMulti.KeyDB.KeyItem();
 
-            it.x509Pub = await MDMulti.CertHelper.GetCertificateFromFile("p4.crt");
-
-            UnityEngine.Debug.Log(it.actualID);
-            UnityEngine.Debug.Log(it.x509Pub);
-
-            s.keys.Add(it);
+            s.keys.Add(new MDMulti.KeyDB.KeyItem(await MDMulti.CertHelper.GetCertificateFromFile("p4.crt")));
             s.AddX509(await MDMulti.CertHelper.GetCertificateFromFile("p4.crt"));
 
             s.SaveToFile();
