@@ -26,7 +26,7 @@ namespace MDMulti
         /// TODO: Extend FileExists to IsFileAvailable
         public static async Task<KeyFile> GetObject()
         {
-            if (!StorageHelper.FileExists(GetConstants().Name))
+            if (!await StorageHelper.FileExistsAndIsJson(GetConstants().Name))
             {
                 UnityEngine.Debug.Log("KEYDB - Creating new");
                 return new KeyFile();
