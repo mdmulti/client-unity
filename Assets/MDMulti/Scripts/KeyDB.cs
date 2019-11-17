@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace MDMulti
 {
-    public class KeyDB
+    public class PeerDB
     {
         /// <summary>
         /// Get the PeerDB / KeyDB constants object.
@@ -19,13 +19,25 @@ namespace MDMulti
             return ConstantsHelper.Get().PeerdbFile;
         }
 
-        // TODO: REMOVE
-        public static KeyFile CreateNewFile()
+        /// <summary>
+        /// Create or load an object
+        /// </summary>
+        /// <returns></returns>
+        /// TODO: Extend FileExists to IsFileAvailable
+        public static async Task<KeyFile> GetObject()
         {
-            return new KeyFile();
+            if (!StorageHelper.FileExists(GetConstants().Name))
+            {
+                UnityEngine.Debug.Log("KEYDB - Creating new");
+                return new KeyFile();
+            } else
+            {
+                UnityEngine.Debug.Log("KEYDB - Loading");
+                return await LoadFromFile();
+            }
         }
 
-        public static async Task<KeyFile> LoadFromFile()
+        private static async Task<KeyFile> LoadFromFile()
         {
             string data = Encoding.UTF8.GetString(await StorageHelper.ReadFileByte(GetConstants().Name));
             return JsonConvert.DeserializeObject<KeyFile>(data);
@@ -71,7 +83,7 @@ namespace MDMulti
                 x509Pub = cert;
             }
 
-            public string actualID { get { return x509Pub.GetSerialNumberString(); } }
+            public string apparentID { get { return x509Pub.GetSerialNumberString(); } }
 
             [JsonConverter(typeof(X509Certificate2Converter))]
             public X509Certificate2 x509Pub;

@@ -46,6 +46,7 @@ namespace MDMulti
             FileStream file = File.OpenRead(GetFullPath(filename));
             byte[] buffer = new byte[file.Length];
             await file.ReadAsync(buffer, 0, (int)file.Length);
+            file.Close();
             return buffer;
         }
 
@@ -54,6 +55,7 @@ namespace MDMulti
             FileStream file = File.OpenRead(GetFullPath(filename));
             byte[] buffer = new byte[file.Length];
             file.Read(buffer, 0, (int)file.Length);
+            file.Close();
             return buffer;
         }
     }

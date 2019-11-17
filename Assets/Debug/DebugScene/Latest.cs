@@ -17,9 +17,9 @@ namespace MDMulti_DEBUG.DebugScene
             // Doesn't really fit in .NET
 
             // KEYDB Testing
-            MDMulti.KeyDB.KeyFile s = MDMulti.KeyDB.CreateNewFile();
+            MDMulti.PeerDB.KeyFile s = await MDMulti.PeerDB.GetObject(); ;
 
-            s.keys.Add(new MDMulti.KeyDB.KeyItem(await MDMulti.CertHelper.GetCertificateFromFile("p4.crt")));
+            //s.keys.Add(new MDMulti.PeerDB.KeyItem(await MDMulti.CertHelper.GetCertificateFromFile("p4.crt")));
             s.AddX509(await MDMulti.CertHelper.GetCertificateFromFile("p4.crt"));
 
             s.SaveToFile();
@@ -40,9 +40,9 @@ namespace MDMulti_DEBUG.DebugScene
             Debug.Log("HASH: " + ss.Item2);
             */
 
-            var kf = await MDMulti.KeyDB.LoadFromFile();
+            var kf = await MDMulti.PeerDB.GetObject();
 
-            Debug.Log((kf).keys[0].actualID);
+            Debug.Log((kf).keys[0].apparentID);
             Debug.Log(MDMulti.CertHelper.IsUserCertificate(kf.keys[0].x509Pub));
 
         }
