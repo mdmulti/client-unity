@@ -3,6 +3,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using UnityEngine;
 
+// Always close your streams to avoid IOExceptions!
+
 namespace MDMulti
 {
     public class StorageHelper
