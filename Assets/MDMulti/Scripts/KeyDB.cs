@@ -23,7 +23,6 @@ namespace MDMulti
         /// <summary>
         /// Create or load an object
         /// </summary>
-        /// <returns></returns>
         /// TODO: Extend FileExists to IsFileAvailable
         public static async Task<KeyFile> GetObject()
         {
@@ -80,14 +79,8 @@ namespace MDMulti
                 KeyItem certKI = new KeyItem(cert);
 
                 bool exists = keys.Any(item => item.GetAID() == certKI.GetAID() && item.GetPublicKeyString() == certKI.GetPublicKeyString());
-
-                UnityEngine.Debug.Log("AINP: EXISTS " + exists);
-
-                if (!exists)
-                {
-                    AddX509Force(cert);
-                    UnityEngine.Debug.Log("ADDED");
-                }
+                
+                if (!exists) AddX509Force(cert);
             }
             
         }
