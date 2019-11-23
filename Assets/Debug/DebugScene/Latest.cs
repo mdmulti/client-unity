@@ -17,11 +17,10 @@ namespace MDMulti_DEBUG.DebugScene
             // Doesn't really fit in .NET
 
             // KEYDB Testing
-            MDMulti.PeerDB.KeyFile s = await MDMulti.PeerDB.GetObject(); ;
+            MDMulti.PeerDB.KeyFile s = await MDMulti.PeerDB.GetObject();
 
             //s.keys.Add(new MDMulti.PeerDB.KeyItem(await MDMulti.CertHelper.GetCertificateFromFile("p4.crt")));
-            s.AddX509(await MDMulti.CertHelper.GetCertificateFromFile("p4.crt"));
-
+            s.AddX509IfNotPresent(await MDMulti.CertHelper.GetCertificateFromFile("p4.crt"));
             s.SaveToFile();
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -63,12 +64,34 @@ namespace MDMulti
             }
             
             /// <summary>
-            /// Add a new certificate item to the database.
+            /// Add a new certificate item to the database, even if it already exists.
             /// </summary>
             /// <param name="cert"></param>
-            public void AddX509(X509Certificate2 cert)
+            public void AddX509Force(X509Certificate2 cert)
             {
                 keys.Add(new KeyItem(cert));
+            }
+
+            /// <summary>
+            /// Add a new certificate item to the database if it was not already present.
+            /// </summary>
+            /// <param name=""></param>
+            public void AddX509IfNotPresent(X509Certificate2 cert)
+            {
+                UnityEngine.Debug.Log(cert.GetSerialNumberString().ToUpper());
+                //var i = keys.Exists(s => s.apparentID == cert.GetSerialNumberString().ToUpper());
+                //var exists = keys.Find(delegate (KeyItem ki)
+                //{
+                //    return ki.apparentID == cert.GetSerialNumberString().ToUpper();
+                //});
+                var exists = keys.Any(item => item.apparentID == new KeyItem(cert).apparentID);
+                UnityEngine.Debug.Log("AINP: EXISTS " + exists);
+
+                if (!exists)
+                {
+                    AddX509Force(cert);
+                    UnityEngine.Debug.Log("ADDED");
+                }
             }
             
         }
@@ -83,7 +106,7 @@ namespace MDMulti
                 x509Pub = cert;
             }
 
-            public string apparentID { get { return x509Pub.GetSerialNumberString(); } }
+            public string apparentID { get { return x509Pub.GetSerialNumberString().ToUpper(); ; } }
 
             [JsonConverter(typeof(X509Certificate2Converter))]
             public X509Certificate2 x509Pub;
