@@ -14,8 +14,6 @@ namespace MDMulti_DEBUG.DebugScene
             //MDMulti.ConstantsHelper.Test();
 
 
-            // Doesn't really fit in .NET
-
             // KEYDB Testing
             MDMulti.PeerDB.KeyFile s = await MDMulti.PeerDB.GetObject();
 
@@ -41,8 +39,8 @@ namespace MDMulti_DEBUG.DebugScene
 
             var kf = await MDMulti.PeerDB.GetObject();
 
-            Debug.Log((kf).keys[0].apparentID);
-            Debug.Log(MDMulti.CertHelper.IsUserCertificate(kf.keys[0].x509Pub));
+            Debug.Log(kf.keys[0].GetAID());
+            Debug.Log(MDMulti.CertHelper.IsUserCertificate(kf.keys[0].GetCert()));
 
         }
     }

@@ -75,16 +75,12 @@ namespace MDMulti
             /// <summary>
             /// Add a new certificate item to the database if it was not already present.
             /// </summary>
-            /// <param name=""></param>
             public void AddX509IfNotPresent(X509Certificate2 cert)
             {
-                UnityEngine.Debug.Log(cert.GetSerialNumberString().ToUpper());
-                //var i = keys.Exists(s => s.apparentID == cert.GetSerialNumberString().ToUpper());
-                //var exists = keys.Find(delegate (KeyItem ki)
-                //{
-                //    return ki.apparentID == cert.GetSerialNumberString().ToUpper();
-                //});
-                var exists = keys.Any(item => item.apparentID == new KeyItem(cert).apparentID);
+                KeyItem certKI = new KeyItem(cert);
+
+                bool exists = keys.Any(item => item.GetAID() == certKI.GetAID() && item.GetPublicKeyString() == certKI.GetPublicKeyString());
+
                 UnityEngine.Debug.Log("AINP: EXISTS " + exists);
 
                 if (!exists)
@@ -103,22 +99,49 @@ namespace MDMulti
         {
             public KeyItem(X509Certificate2 cert)
             {
-                x509Pub = cert;
+                _x509Pub = cert;
             }
 
-            public string apparentID { get { return x509Pub.GetSerialNumberString().ToUpper(); ; } }
+            [JsonProperty("apparentID")]
+            // This object has been made private so that we can
+            // freely rename these in the future without affecting compatability.
+            private string _apparentID { get { return GetCert().GetSerialNumberString().ToUpper(); } }
 
+
+            [JsonProperty("x509Pub")]
             [JsonConverter(typeof(X509Certificate2Converter))]
-            public X509Certificate2 x509Pub;
-
-            public X509Certificate2 getCert()
+            // This object has been made private so that we can
+            // freely rename these in the future without affecting compatability.
+            private X509Certificate2 _x509Pub;
+            
+            /// <summary>
+            /// Get the X509Certificate2 object for this item.
+            /// </summary>
+            public X509Certificate2 GetCert()
             {
-                return new X509Certificate2(x509Pub);
+                return _x509Pub;
+            }
+
+            /// <summary>
+            /// Get the apparent ID for this item.
+            /// </summary>
+            public string GetAID()
+            {
+                return _apparentID;
+            }
+
+            /// <summary>
+            /// Get the public key for this item as a string.
+            /// </summary>
+            /// <returns>The string representation of the public key.</returns>
+            public string GetPublicKeyString()
+            {
+                return GetCert().GetPublicKeyString();
             }
         }
 
         /// <summary>
-        /// NewtonSoft JSON converter to serialize an X509Certificate2 to a Base64 string.
+        /// NewtonSoft.JSON converter to serialize an X509Certificate2 to a Base64 string.
         /// Uses <seealso cref="CertHelper.ExportCertificate(X509Certificate2)"/>
         /// </summary>
         public class X509Certificate2Converter : JsonConverter
@@ -136,7 +159,7 @@ namespace MDMulti
             }
 
             // CanRead is not required as it is enabled by default
-            // It is also takes no arguments
+            // It also takes no arguments
 
             public override bool CanConvert(Type objectType)
             {
