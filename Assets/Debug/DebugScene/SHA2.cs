@@ -7,10 +7,11 @@ namespace MDMulti_DEBUG.DebugScene
 {
     public class SHA2 : MonoBehaviour
     {
-        string dataToHash = "This is a SHA256 test.";
-        byte[] dataToHashB { get { return Encoding.UTF8.GetBytes(dataToHash); } }
+        private readonly string dataToHash = "This is a SHA256 test.";
+        // No point adding readonly here as there is only a getter anyways.
+        private byte[] dataToHashB { get { return Encoding.UTF8.GetBytes(dataToHash); } }
 
-        string expectedHash = "4816482f8b4149f687a1a33d61a0de6b611364ec0fb7adffa59ff2af672f7232".ToUpper();
+        private readonly string expectedHash = "4816482f8b4149f687a1a33d61a0de6b611364ec0fb7adffa59ff2af672f7232".ToUpper();
 
         public void Test()
         {
