@@ -21,6 +21,9 @@ namespace MDMulti.Constants
         [JsonProperty("mdms_version", Required = Required.Always)]
         public long MdmsVersion { get; set; }
 
+        [JsonProperty("peerdb_file", Required = Required.Always)]
+        public PeerdbFile PeerdbFile { get; set; }
+
         [JsonProperty("oid", Required = Required.Always)]
         public Oid Oid { get; set; }
 
@@ -56,6 +59,15 @@ namespace MDMulti.Constants
     {
         [JsonProperty("base", Required = Required.Always)]
         public string Base { get; set; }
+    }
+
+    public partial class PeerdbFile
+    {
+        [JsonProperty("name", Required = Required.Always)]
+        public string Name { get; set; }
+
+        [JsonProperty("version", Required = Required.Always)]
+        public long Version { get; set; }
     }
 
     public partial class ConstantsObject

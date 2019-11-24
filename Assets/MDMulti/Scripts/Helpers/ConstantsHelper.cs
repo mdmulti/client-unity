@@ -5,15 +5,13 @@ namespace MDMulti
 {
     public class ConstantsHelper
     {
+        /// <summary>
+        /// Get the Constants Object.
+        /// </summary>
         public static ConstantsObject Get()
         {
             string data = Resources.Load<TextAsset>("constants").text;
             return ConstantsObject.FromJson(data);
-        }
-
-        public static void Test()
-        {
-            Debug.Log(Get().Lan.Multicast.Address + ":" + Get().Lan.Multicast.Port);
         }
     }
 }
