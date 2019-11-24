@@ -21,9 +21,8 @@ namespace MDMulti
         }
 
         /// <summary>
-        /// Create or load an object
+        /// Create or load an object.
         /// </summary>
-        /// TODO: Extend FileExists to IsFileAvailable
         public static async Task<KeyFile> GetObject()
         {
             if (!await StorageHelper.FileExistsAndIsJson(GetConstants().Name))
